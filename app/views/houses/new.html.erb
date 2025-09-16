@@ -1,0 +1,30 @@
+<%= form_with model: @house, local: true, html: { multipart: true, class: "max-w-xl mx-auto bg-white p-6 rounded shadow" } do |f| %>
+  <h2 class="text-xl font-bold mb-4"><%= @house.new_record? ? "New House" : "Edit House" %></h2>
+
+  <div class="mb-4">
+    <%= f.label :house_name, class: "block font-semibold" %>
+    <%= f.text_field :house_name, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+  </div>
+
+  <div class="mb-4">
+    <%= f.label :address, class: "block font-semibold" %>
+    <%= f.text_area :address, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+  </div>
+
+  <div class="mb-4">
+    <%= f.label :owner_name, class: "block font-semibold" %>
+    <%= f.text_field :owner_name, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+  </div>
+
+  <div class="mb-4">
+    <%= f.label :no_of_rooms, class: "block font-semibold" %>
+    <%= f.number_field :no_of_rooms, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+  </div>
+
+  <div class="mb-4">
+    <%= f.label :house_images, "Upload Images", class: "block font-semibold" %>
+    <%= f.file_field :house_images, multiple: true, class: "w-full" %>
+  </div>
+
+  <%= f.submit @house.new_record? ? "Create" : "Update", class: "bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" %>
+<% end %>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Tms" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="bg-gray-100 text-gray-900">
+    <!-- Tailwind Navbar -->
+    <nav class="bg-gray-900 text-white shadow p-4 flex justify-between items-center">
+      <div class="text-2xl font-bold text-white">TMS</div>
+
+      <div class="flex items-center space-x-4">
+        <% if user_signed_in? %>
+          <span class="text-gray-300 whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]">Hello, <%= current_user.username || current_user.email %></span>
+          <%= button_to 'Logout', destroy_user_session_path, method: :delete, class: "bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded" %>
+        <% else %>
+          <%= link_to 'Login', new_user_session_path, class: "mr-4 text-blue-300 hover:text-white" %>
+          <%= link_to 'Sign Up', new_user_registration_path, class: "text-blue-300 hover:text-white" %>
+        <% end %>
+      </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <div class="container mx-auto px-4 mt-4">
+      <% if notice %>
+        <div class="bg-green-100 text-green-700 px-4 py-2 rounded mb-4">
+          <%= notice %>
+        </div>
+      <% end %>
+
+      <% if alert %>
+        <div class="bg-red-100 text-red-700 px-4 py-2 rounded mb-4">
+          <%= alert %>
+        </div>
+      <% end %>
+
+      <!-- Main content -->
+      <%= yield %>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  house: one
+  room_number: 1
+  rent: 9.99
+  status: MyString
+  month_of_rent: MyString
+  previous_month_electricity_reading: 1
+  current_month_electricity_reading: 1
+  electricity_bill: 9.99
+  total_amount: 9.99
+  paid_status: false
+
+two:
+  house: two
+  room_number: 1
+  rent: 9.99
+  status: MyString
+  month_of_rent: MyString
+  previous_month_electricity_reading: 1
+  current_month_electricity_reading: 1
+  electricity_bill: 9.99
+  total_amount: 9.99
+  paid_status: false

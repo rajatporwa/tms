@@ -1,0 +1,45 @@
+<h2 class="text-2xl font-bold mb-4"><%= @house.house_name %> - Rooms</h2>
+<h4 class="text-m font-bold mb-4">Address - <%= @house.address %></h4>
+<h4 class="text-m font-bold mb-4">Owner Name - <%= @house.owner_name %></h4>
+<h4 class="text-m font-bold mb-4">Total Rooms - <%= @house.no_of_rooms %></h4>
+
+<table class="min-w-full bg-white border border-gray-200">
+  <thead>
+    <tr>
+      <th class="py-2 px-4 border-b">Room</th>
+      <th class="py-2 px-4 border-b">Tenant Name</th>
+      <th class="py-2 px-4 border-b">Rent</th>
+      <th class="py-2 px-4 border-b">Status</th>
+      <th class="py-2 px-4 border-b">Start Date</th>
+      <th class="py-2 px-4 border-b">End Date</th>
+      <th class="py-2 px-4 border-b">No of partners</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% (1..@house.no_of_rooms).each do |i| %>
+      <% room = @house.house_rooms.find_by(room_number: i) %>
+      <% if room %>
+        <%= link_to house_room_path(room), class: "block hover:bg-gray-100" do %>
+          <tr class="cursor-pointer">
+            <td class="py-2 px-4 border-b text-center">Room <%= room.room_number %></td>
+            <td class="py-2 px-4 border-b text-center">₹<%= room.rent %></td>
+            <td class="py-2 px-4 border-b text-center"><%= room.status.capitalize %></td>
+            <td class="py-2 px-4 border-b text-center"><%= room.start_date %></td>
+            <td class="py-2 px-4 border-b text-center"><%= room.end_date %></td>
+            <td class="py-2 px-4 border-b text-center"><%= room.start_date %></td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr class="bg-gray-50 text-gray-400">
+          <td class="py-2 px-4 border-b text-center">Room <%= i %></td>
+          <td class="py-2 px-4 border-b text-center">N/A</td>
+          <td class="py-2 px-4 border-b text-center">Not created</td>
+          <td class="py-2 px-4 border-b text-center">Not created</td>
+          <td class="py-2 px-4 border-b text-center">Not created</td>
+          <td class="py-2 px-4 border-b text-center">Not created</td>
+          <td class="py-2 px-4 border-b text-center">Not created</td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

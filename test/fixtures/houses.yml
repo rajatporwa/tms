@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  house_name: MyString
+  address: MyString
+  owner_name: MyString
+  owner_id: 1
+  no_of_rooms: 1
+
+two:
+  house_name: MyString
+  address: MyString
+  owner_name: MyString
+  owner_id: 1
+  no_of_rooms: 1

@@ -1,0 +1,38 @@
+<div class="bg-gray-100 text-gray-900 mt-40 flex items-center justify-center">
+  <div class="bg-white p-8 rounded shadow-md w-[30%]">
+    <h2 class="text-2xl font-bold mb-6 text-center">Create an Account</h2>
+
+    <%= form_with model: resource, as: resource_name, url: registration_path(resource_name), local: true do |f| %>
+      <div class="mb-4">
+        <%= f.label :firstname, class: "block text-gray-700" %>
+        <%= f.text_field :firstname, class: "mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300" %>
+      </div>
+
+      <div class="mb-4">
+        <%= f.label :lastname, class: "block text-gray-700" %>
+        <%= f.text_field :lastname, class: "mt-1 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300" %>
+      </div>
+
+      <div class="mb-4">
+        <%= f.label :email, class: "block text-gray-700" %>
+        <%= f.email_field :email, autofocus: true, class: "mt-1 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300" %>
+      </div>
+
+      <div class="mb-4">
+        <%= f.label :password, class: "block text-gray-700" %>
+        <%= f.password_field :password, autocomplete: "new-password", class: "mt-1 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300" %>
+      </div>
+
+      <div class="mb-6">
+        <%= f.label :password_confirmation, class: "block text-gray-700" %>
+        <%= f.password_field :password_confirmation, class: "mt-1 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300" %>
+      </div>
+
+      <%= f.submit "Sign up", class: "w-full bg-green-600 text-white py-2 rounded hover:bg-green-700" %>
+    <% end %>
+
+    <div class="mt-4 text-center">
+      <%= link_to "Already have an account? Log in", new_user_session_path, class: "text-blue-600 hover:underline" %>
+    </div>
+  </div>
+</div>
