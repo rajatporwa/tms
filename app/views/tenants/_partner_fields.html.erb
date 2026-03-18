@@ -1,0 +1,108 @@
+<div class="grid grid-cols-2 gap-4 relative border p-4 rounded bg-gray-50">
+  <div>
+    <%= p.label :first_name, class: "block font-semibold mb-1" %>
+    <%= p.text_field :first_name, class: "w-full border rounded px-3 py-2" %>
+  </div>
+  <div>
+    <%= p.label :last_name, class: "block font-semibold mb-1" %>
+    <%= p.text_field :last_name, class: "w-full border rounded px-3 py-2" %>
+  </div>
+  <div>
+    <%= p.label :dob, class: "block font-semibold mb-1" %>
+    <%= p.date_field :dob, class: "w-full border rounded px-3 py-2" %>
+  </div>
+  <div>
+    <%= p.label :gender, class: "block font-semibold mb-1" %>
+    <%= p.text_field :gender, class: "w-full border rounded px-3 py-2" %>
+  </div>
+  <!-- Parents -->
+  <div>
+    <%= p.label :father_name, class: "block font-semibold mb-1" %>
+    <%= p.text_field :father_name, class: "w-full border rounded px-3 py-2" %>
+  </div>
+  <div>
+    <%= p.label :mother_name, class: "block font-semibold mb-1" %>
+    <%= p.text_field :mother_name, class: "w-full border rounded px-3 py-2" %>
+  </div>
+  <div>
+    <%= p.label :father_contact, class: "block font-semibold mb-1" %>
+    <%= p.text_field :father_contact, class: "w-full border rounded px-3 py-2" %>
+  </div>
+  <div>
+    <%= p.label :mother_contact, class: "block font-semibold mb-1" %>
+    <%= p.text_field :mother_contact, class: "w-full border rounded px-3 py-2" %>
+  </div>
+  <!-- contacts -->
+  <div>
+    <%= p.label :mobile, class: "block font-semibold mb-1" %>
+    <%= p.text_field :mobile, class: "w-full border rounded px-3 py-2" %>
+  </div>
+  <div>
+    <%= p.label :alternate_mobile, class: "block font-semibold mb-1" %>
+    <%= p.text_field :alternate_mobile, class: "w-full border rounded px-3 py-2" %>
+  </div>
+   <!-- Addresses -->
+    <div class="col-span-2">
+      <%= p.label :before_rent_address, class: "block font-semibold mb-1" %>
+      <%= p.text_area :before_rent_address, rows: 3, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div class="col-span-2">
+      <%= p.label :permanent_address, class: "block font-semibold mb-1" %>
+      <%= p.text_area :permanent_address, rows: 3, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <!-- Location -->
+    <div>
+      <%= p.label :postal_code, class: "block font-semibold mb-1" %>
+      <%= p.text_field :postal_code, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= p.label :district, class: "block font-semibold mb-1" %>
+      <%= p.text_field :district, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= p.label :state, class: "block font-semibold mb-1" %>
+      <%= p.text_field :state, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= p.label :country, class: "block font-semibold mb-1" %>
+      <%= p.text_field :country, class: "w-full border rounded px-3 py-2" %>
+    </div>
+
+    <!-- Occupation -->
+    <div>
+      <%= p.label :occupation, class: "block font-semibold mb-1" %>
+      <%= p.text_field :occupation, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= p.label :occupation_contact, class: "block font-semibold mb-1" %>
+      <%= p.text_field :occupation_contact, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div class="col-span-2">
+      <%= p.label :occupation_address, class: "block font-semibold mb-1" %>
+      <%= p.text_area :occupation_address, rows: 3, class: "w-full border rounded px-3 py-2" %>
+    </div>
+
+    <!-- Documents -->
+    <div>
+      <%= p.label :document_type, class: "block font-semibold mb-1" %>
+      <%= p.text_field :document_type, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= p.label :document_number, class: "block font-semibold mb-1" %>
+      <%= p.text_field :document_number, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= p.label :document_file, class: "block font-semibold mb-1" %>
+      <%= p.file_field :document_file, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= p.label :profile_photo, class: "block font-semibold mb-1" %>
+      <%= p.file_field :profile_photo, class: "w-full border rounded px-3 py-2" %>
+    </div>
+
+
+  <button type="button"
+          class="remove-partner absolute top-2 right-2 text-red-500 hover:text-red-700 font-bold">
+    Remove
+  </button>
+</div>

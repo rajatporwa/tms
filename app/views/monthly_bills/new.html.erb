@@ -1,0 +1,45 @@
+<div class="max-w-3xl mx-auto bg-white shadow rounded-lg p-6">
+  <h2 class="text-2xl font-bold mb-6 text-center">Create Monthly Bill</h2>
+
+  <%= form_with model: [@house, @house_room, @tenant, @monthly_bill], local: true do |f| %>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      <div>
+        <%= f.label :month, class: "font-semibold" %>
+        <%= f.select :month, Date::MONTHNAMES.compact.each_with_index.map { |m, i| [m, i+1] },
+          {}, class: "w-full border rounded px-3 py-2" %>
+      </div>
+
+      <div>
+        <%= f.label :year, class: "font-semibold" %>
+        <%= f.number_field :year, value: Date.today.year,
+          class: "w-full border rounded px-3 py-2" %>
+      </div>
+
+      <div>
+        <%= f.label :rent_amount, class: "font-semibold" %>
+        <%= f.number_field :rent_amount,
+          class: "w-full border rounded px-3 py-2" %>
+      </div>
+
+      <div>
+        <%= f.label :maintenance_amount, class: "font-semibold" %>
+        <%= f.number_field :maintenance_amount,
+          class: "w-full border rounded px-3 py-2" %>
+      </div>
+
+      <div class="md:col-span-2">
+        <%= f.label :due_date, class: "font-semibold" %>
+        <%= f.date_field :due_date,
+          class: "w-full border rounded px-3 py-2" %>
+      </div>
+    </div>
+
+    <div class="mt-6 text-center">
+      <%= f.submit "Create Bill",
+        class: "bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700" %>
+    </div>
+
+  <% end %>
+</div>

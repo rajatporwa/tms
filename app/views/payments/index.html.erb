@@ -1,0 +1,30 @@
+<h2 class="text-2xl font-bold mb-4">Payments for <%= @tenant.full_name %> - <%= @rent.month %></h2>
+<%= link_to 'Add Payment', new_tenant_rent_payment_path(@tenant, @rent), class: 'bg-blue-600 text-white px-4 py-2 rounded mb-4 inline-block' %>
+<table class="min-w-full bg-white border border-gray-200">
+  <thead>
+    <tr>
+      <th>Amount</th>
+      <th>Date</th>
+      <th>Mode</th>
+      <th>Transaction ID</th>
+      <th>Note</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @payments.each do |payment| %>
+      <tr>
+        <td>₹<%= payment.amount %></td>
+        <td><%= payment.payment_date %></td>
+        <td><%= payment.payment_mode %></td>
+        <td><%= payment.transaction_id %></td>
+        <td><%= payment.note %></td>
+        <td>
+          <%= link_to 'Show', tenant_rent_payment_path(@tenant, @rent, payment), class: 'text-blue-600' %> |
+          <%= link_to 'Edit', edit_tenant_rent_payment_path(@tenant, @rent, payment), class: 'text-yellow-600' %> |
+          <%= link_to 'Delete', tenant_rent_payment_path(@tenant, @rent, payment), method: :delete, data: { confirm: 'Are you sure?' }, class: 'text-red-600' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

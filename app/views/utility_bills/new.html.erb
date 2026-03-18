@@ -1,0 +1,40 @@
+<div class="max-w-2xl mx-auto bg-white shadow rounded-lg p-6">
+  <h2 class="text-xl font-bold mb-4">Add Utility</h2>
+
+  <%= form_with model: [@house, @house_room, @tenant, @monthly_bill, @utility_bill], local: true do |f| %>
+
+    <div class="space-y-4">
+
+      <div>
+        <%= f.label :utility_type, class: "font-semibold" %>
+        <%= f.select :utility_type,
+          ["Electricity", "Water", "Gas", "Internet"],
+          {}, class: "w-full border rounded px-3 py-2" %>
+      </div>
+
+      <div class="grid grid-cols-3 gap-3">
+        <div>
+          <%= f.label :start_unit %>
+          <%= f.number_field :start_unit, class: "w-full border rounded px-3 py-2" %>
+        </div>
+
+        <div>
+          <%= f.label :end_unit %>
+          <%= f.number_field :end_unit, class: "w-full border rounded px-3 py-2" %>
+        </div>
+
+        <div>
+          <%= f.label :unit_rate %>
+          <%= f.number_field :unit_rate, class: "w-full border rounded px-3 py-2" %>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mt-6 text-center">
+      <%= f.submit "Add Utility",
+        class: "bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700" %>
+    </div>
+
+  <% end %>
+</div>

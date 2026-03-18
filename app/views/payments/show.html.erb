@@ -1,0 +1,15 @@
+<h2 class="text-2xl font-bold mb-4">Payment Details for <%= @tenant.full_name %> - <%= @rent.month %></h2>
+<table class="min-w-full bg-white border border-gray-200">
+  <tr><th>Amount</th><td>₹<%= @payment.amount %></td></tr>
+  <tr><th>Date</th><td><%= @payment.payment_date %></td></tr>
+  <tr><th>Mode</th><td><%= @payment.payment_mode %></td></tr>
+  <tr><th>Transaction ID</th><td><%= @payment.transaction_id %></td></tr>
+  <tr><th>Note</th><td><%= @payment.note %></td></tr>
+</table>
+<% if @payment.payment_mode.downcase == 'upi' && @payment.upi_qr_code_url.present? %>
+  <div class="mt-4">
+    <h3 class="font-bold">Scan to Pay (UPI QR):</h3>
+    <img src="<%= @payment.upi_qr_code_url %>" alt="UPI QR Code" class="border rounded shadow w-48 h-48" />
+  </div>
+<% end %>
+<%= link_to 'Back to Payments', tenant_rent_payments_path(@tenant, @rent), class: 'bg-blue-600 text-white px-4 py-2 rounded mt-4 inline-block' %>

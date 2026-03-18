@@ -1,45 +1,127 @@
-<h2 class="text-2xl font-bold mb-4"><%= @house.house_name %> - Rooms</h2>
-<h4 class="text-m font-bold mb-4">Address - <%= @house.address %></h4>
-<h4 class="text-m font-bold mb-4">Owner Name - <%= @house.owner_name %></h4>
-<h4 class="text-m font-bold mb-4">Total Rooms - <%= @house.no_of_rooms %></h4>
+<div class="bg-white rounded-2xl shadow p-6 mb-6">
+  <h2 class="text-2xl font-bold text-gray-800 mb-2 text-center">
+    <%= @house.house_name %>
+  </h2>
 
-<table class="min-w-full bg-white border border-gray-200">
-  <thead>
-    <tr>
-      <th class="py-2 px-4 border-b">Room</th>
-      <th class="py-2 px-4 border-b">Tenant Name</th>
-      <th class="py-2 px-4 border-b">Rent</th>
-      <th class="py-2 px-4 border-b">Status</th>
-      <th class="py-2 px-4 border-b">Start Date</th>
-      <th class="py-2 px-4 border-b">End Date</th>
-      <th class="py-2 px-4 border-b">No of partners</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% (1..@house.no_of_rooms).each do |i| %>
-      <% room = @house.house_rooms.find_by(room_number: i) %>
-      <% if room %>
-        <%= link_to house_room_path(room), class: "block hover:bg-gray-100" do %>
-          <tr class="cursor-pointer">
-            <td class="py-2 px-4 border-b text-center">Room <%= room.room_number %></td>
-            <td class="py-2 px-4 border-b text-center">₹<%= room.rent %></td>
-            <td class="py-2 px-4 border-b text-center"><%= room.status.capitalize %></td>
-            <td class="py-2 px-4 border-b text-center"><%= room.start_date %></td>
-            <td class="py-2 px-4 border-b text-center"><%= room.end_date %></td>
-            <td class="py-2 px-4 border-b text-center"><%= room.start_date %></td>
-          </tr>
-        <% end %>
-      <% else %>
-        <tr class="bg-gray-50 text-gray-400">
-          <td class="py-2 px-4 border-b text-center">Room <%= i %></td>
-          <td class="py-2 px-4 border-b text-center">N/A</td>
-          <td class="py-2 px-4 border-b text-center">Not created</td>
-          <td class="py-2 px-4 border-b text-center">Not created</td>
-          <td class="py-2 px-4 border-b text-center">Not created</td>
-          <td class="py-2 px-4 border-b text-center">Not created</td>
-          <td class="py-2 px-4 border-b text-center">Not created</td>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-gray-600">
+    <p><span class="font-semibold">Address:</span> <%= @house.address %></p>
+    <p><span class="font-semibold">Owner:</span> <%= @house.owner_name %></p>
+    <p><span class="font-semibold">Total Rooms:</span> <%= @house.no_of_rooms %></p>
+  </div>
+</div>
+
+<div class="bg-white rounded-2xl shadow overflow-hidden">
+  <table class="min-w-full text-sm">
+
+    <!-- Header -->
+    <thead class="bg-black text-white">
+      <tr>
+        <th class="px-4 py-3 text-left font-semibold">Room</th>
+        <th class="px-4 py-3 text-center font-semibold">Rent</th>
+        <th class="px-4 py-3 text-left font-semibold">Tenant</th>
+        <th class="px-4 py-3 text-center font-semibold">Start Date</th>
+        <th class="px-4 py-3 text-center font-semibold">Mobile</th>
+        <th class="px-4 py-3 text-center font-semibold">Partners</th>
+        <th class="px-4 py-3 text-center font-semibold">Status</th>
+      </tr>
+    </thead>
+
+    <!-- Body -->
+    <tbody class="divide-y divide-gray-200">
+      <% (1..@house.no_of_rooms).each_with_index do |i, index| %>
+        <% room = @house.house_rooms.find_by(room_number: i) %>
+        <% tenant = room&.tenants&.last %>
+
+        <tr
+          class="
+            <%= index.even? ? 'bg-gray-100' : 'bg-white' %>
+            hover:bg-gray-200 transition cursor-pointer
+          "
+          data-url="<%= tenant.present? ? house_house_room_tenant_path(@house, room, tenant) : new_house_house_room_tenant_path(@house, room) %>">
+
+          <td class="px-4 py-3 font-semibold text-gray-800">
+            Room <%= i %>
+          </td>
+
+          <td class="px-4 py-3 text-center">
+            <%= room ? "₹#{room.rent}" : "—" %>
+          </td>
+
+          <td class="px-4 py-3">
+            <%= tenant&.full_name || "—" %>
+          </td>
+
+          <td class="px-4 py-3 text-center">
+            <%= tenant&.rent_start_date || "—" %>
+          </td>
+
+          <td class="px-4 py-3 text-center">
+            <%= tenant&.mobile || "—" %>
+          </td>
+
+          <td class="px-4 py-3 text-center">
+            <%= tenant ? tenant.tenant_partners.size : "—" %>
+          </td>
+
+         <td class="px-4 py-3 text-center space-y-2">
+
+          <% if tenant.present? %>
+
+            <span class="inline-block px-3 py-1 rounded-full bg-red-100 text-red-700 font-medium">
+              Occupied
+            </span>
+
+            <div class="flex flex-col gap-1 text-xs">
+
+              <%= link_to "Monthly Bill",
+                house_house_room_tenant_monthly_bills_path(@house, room, tenant),
+                class: "text-indigo-600 hover:underline" %>
+
+              <%= link_to "Add Utility",
+                new_house_house_room_tenant_monthly_bill_utility_bill_path(
+                  @house,
+                  room,
+                  tenant,
+                  tenant.monthly_bills.last
+                ),
+                class: "text-yellow-600 hover:underline" if tenant.monthly_bills.any? %>
+
+              <%= link_to "Payments",
+                house_house_room_tenant_monthly_bill_payments_path(
+                  @house,
+                  room,
+                  tenant,
+                  tenant.monthly_bills.last
+                ),
+                class: "text-green-600 hover:underline" if tenant.monthly_bills.any? %>
+
+            </div>
+
+          <% else %>
+
+            <span class="px-3 py-1 rounded-full bg-purple-100 text-purple-700 font-medium">
+              Vacant
+            </span>
+
+          <% end %>
+
+        </td>
+
         </tr>
       <% end %>
-    <% end %>
-  </tbody>
-</table>
+    </tbody>
+
+  </table>
+</div>
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("tr[data-url]").forEach(row => {
+      row.addEventListener("click", () => {
+        window.location = row.dataset.url
+      })
+    })
+  })
+</script>

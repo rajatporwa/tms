@@ -1,0 +1,11 @@
+<h2 class="text-2xl font-bold mb-4">Rent Record for <%= @tenant.full_name %></h2>
+<table class="min-w-full bg-white border border-gray-200">
+  <tr><th>Month</th><td><%= @rent.month %></td></tr>
+  <tr><th>Rent Amount</th><td>₹<%= @rent.rent_amount %></td></tr>
+  <tr><th>Electricity Share</th><td>₹<%= @rent.electricity_share %></td></tr>
+  <tr><th>Total Amount</th><td>₹<%= @rent.total_amount %></td></tr>
+  <tr><th>Paid Amount</th><td>₹<%= @rent.paid_amount %></td></tr>
+  <tr><th>Due Amount</th><td>₹<%= @rent.due_amount %></td></tr>
+  <tr><th>Status</th><td><%= @rent.status.capitalize %></td></tr>
+</table>
+<%= link_to 'Back to Rent List', tenant_rents_path(@tenant), class: 'bg-blue-600 text-white px-4 py-2 rounded mt-4 inline-block' %>

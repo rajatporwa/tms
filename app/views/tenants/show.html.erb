@@ -1,0 +1,141 @@
+<h2 class="text-2xl font-bold mb-6 text-center text-gray-900">
+  Tenant Details
+</h2>
+
+<div class="bg-white rounded-2xl shadow-lg p-8 mb-12">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+    <!-- LEFT PROFILE -->
+    <div class="flex flex-col items-center text-center">
+
+      <% if @tenant.profile_photo.attached? %>
+        <%= image_tag @tenant.profile_photo,
+          class: "w-32 h-32 rounded-full object-cover border-4 border-gray-200 mb-4" %>
+      <% else %>
+        <div class="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center mb-4">
+          <span class="text-gray-500">No Photo</span>
+        </div>
+      <% end %>
+
+      <h3 class="text-2xl font-bold text-gray-900">
+        <%= @tenant.first_name %> <%= @tenant.last_name %>
+      </h3>
+
+      <p class="text-gray-600 mt-1">
+        Room No:
+        <span class="font-semibold"><%= @house_room.room_number %></span>
+      </p>
+
+      <span class="mt-3 px-4 py-1 rounded-full text-sm font-semibold
+        <%= @tenant.status == "active" ? "bg-green-500 text-white" : "bg-red-500 text-white" %>">
+        <%= @tenant.status.capitalize %>
+      </span>
+
+      <!-- ACTIONS -->
+      <div class="flex flex-col sm:flex-row gap-3 mt-6 w-full justify-center">
+
+        <% if @tenant.document_file.attached? %>
+          <%= link_to "View Document",
+            url_for(@tenant.document_file),
+            target: "_blank",
+            class: "px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition" %>
+        <% end %>
+
+        <%= link_to "Edit Details",
+          edit_house_house_room_tenant_path(@house, @house_room, @tenant),
+          class: "px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition" %>
+
+        <%= link_to "Back",
+          house_path(@house),
+          class: "px-4 py-2 bg-gray-300 text-gray-900 rounded-lg hover:bg-gray-400 transition" %>
+      </div>
+    </div>
+
+    <!-- RIGHT DETAILS -->
+    <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-4 text-gray-700">
+
+      <p><span class="font-semibold text-gray-900">DOB:</span> <%= @tenant.dob %></p>
+      <p><span class="font-semibold text-gray-900">Gender:</span> <%= @tenant.gender %></p>
+
+      <p><span class="font-semibold text-gray-900">Mobile:</span> <%= @tenant.mobile %></p>
+      <p><span class="font-semibold text-gray-900">Alternate:</span> <%= @tenant.alternate_mobile.presence || "-" %></p>
+
+      <p><span class="font-semibold text-gray-900">Permanent Address:</span> <%= @tenant.permanent_address %></p>
+
+      <p><span class="font-semibold text-gray-900">Before Rent Address:</span><br> <%= @tenant.before_rent_address %></p>
+
+      <p><span class="font-semibold text-gray-900">Occupation:</span> <%= @tenant.occupation %></p>
+      <p><span class="font-semibold text-gray-900">Vehicle No:</span> <%= @tenant.vehicle_no %></p>
+
+      <p><span class="font-semibold text-gray-900">Document Type:</span> <%= @tenant.document_type %></p>
+      <p><span class="font-semibold text-gray-900">Document Number:</span> <%= @tenant.document_number %></p>
+
+    </div>
+  </div>
+</div>
+
+<h2 class="text-xl font-bold mb-6 text-gray-900">
+  Tenant Partners
+</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <% @tenant.tenant_partners.each do |partner| %>
+
+    <div class="bg-white rounded-2xl shadow-lg p-6">
+
+      <!-- HEADER -->
+      <div class="flex items-center mb-5">
+        <% if partner.profile_photo.attached? %>
+          <%= image_tag partner.profile_photo,
+            class: "w-20 h-20 rounded-full object-cover border-2 border-gray-200 mr-4" %>
+        <% else %>
+          <div class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center mr-4">
+            <span class="text-gray-500 text-sm">No Photo</span>
+          </div>
+        <% end %>
+
+        <div>
+          <h3 class="text-lg font-bold text-gray-900">
+            <%= partner.first_name %> <%= partner.last_name %>
+          </h3>
+          <p class="text-gray-600 text-sm">Gender: <%= partner.gender %></p>
+          <p class="text-gray-600 text-sm">Mobile: <%= partner.mobile %></p>
+        </div>
+      </div>
+
+      <!-- DETAILS -->
+      <div class="grid grid-cols-2 gap-3 text-sm text-gray-700">
+        <p><span class="font-semibold text-gray-900">DOB:</span> <%= partner.dob %></p>
+        <p><span class="font-semibold text-gray-900">Occupation:</span> <%= partner.occupation %></p>
+
+        <p><span class="font-semibold text-gray-900">Father:</span> <%= partner.father_name %></p>
+        <p><span class="font-semibold text-gray-900">Mother:</span> <%= partner.mother_name %></p>
+
+        <p><span class="font-semibold text-gray-900">Father Contact:</span> <%= partner.father_contact %></p>
+        <p><span class="font-semibold text-gray-900">Mother Contact:</span> <%= partner.mother_contact %></p>
+
+        <p class="col-span-2">
+          <span class="font-semibold text-gray-900">Permanent Address:</span><br>
+          <%= partner.permanent_address %>
+        </p>
+      </div>
+
+      <!-- DOCUMENT -->
+      <div class="mt-5 pt-4 border-t border-gray-200 text-sm">
+        <p><span class="font-semibold text-gray-900">Document Type:</span> <%= partner.document_type %></p>
+        <p><span class="font-semibold text-gray-900">Document Number:</span> <%= partner.document_number %></p>
+
+        <% if partner.document_file.attached? %>
+          <a href="<%= url_for(partner.document_file) %>"
+             target="_blank"
+             class="inline-block mt-2 text-black font-medium hover:underline">
+            View Document
+          </a>
+        <% end %>
+      </div>
+
+    </div>
+
+  <% end %>
+</div>
+

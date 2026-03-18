@@ -1,6 +1,7 @@
 class HouseRoom < ApplicationRecord
   belongs_to :house
+
+  has_many :tenants
   
-  enum status: { vacant: 0, occupied: 1 }
-  enum paid_status: { paid: 1, unpaid: 1}
+  enum status: { vacant: "vacant", occupied: "occupied" }
 end

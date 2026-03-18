@@ -65,3 +65,7 @@ gem "devise", "~> 4.9"
 gem "tailwindcss-rails"
 
 gem "image_processing", "~> 1.2"
+
+gem 'activeadmin'
+gem 'sassc', '~> 2.4'
+

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_06_06_062328) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_20_123000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -42,17 +42,37 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_06_062328) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "admin_users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_admin_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
+  end
+
+  create_table "electricity_bills", force: :cascade do |t|
+    t.bigint "house_room_id", null: false
+    t.date "month"
+    t.integer "units", default: 0
+    t.integer "per_unit", default: 0
+    t.decimal "amount", default: "0.0"
+    t.integer "previous_units", default: 0
+    t.integer "current_units", default: 0
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["house_room_id"], name: "index_electricity_bills_on_house_room_id"
+  end
+
   create_table "house_rooms", force: :cascade do |t|
     t.bigint "house_id", null: false
     t.integer "room_number"
     t.decimal "rent"
-    t.string "status"
-    t.string "month_of_rent"
-    t.integer "previous_month_electricity_reading"
-    t.integer "current_month_electricity_reading"
-    t.decimal "electricity_bill"
-    t.decimal "total_amount"
-    t.boolean "paid_status"
+    t.string "status", default: "vacant", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["house_id"], name: "index_house_rooms_on_house_id"
@@ -66,6 +86,126 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_06_062328) do
     t.integer "no_of_rooms"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "monthly_bills", force: :cascade do |t|
+    t.bigint "house_id", null: false
+    t.bigint "house_room_id", null: false
+    t.bigint "tenant_id", null: false
+    t.integer "month"
+    t.integer "year"
+    t.decimal "rent_amount"
+    t.decimal "utility_amount"
+    t.decimal "maintenance_amount"
+    t.decimal "total_amount"
+    t.decimal "paid_amount"
+    t.string "status"
+    t.date "due_date"
+    t.date "date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["house_id"], name: "index_monthly_bills_on_house_id"
+    t.index ["house_room_id"], name: "index_monthly_bills_on_house_room_id"
+    t.index ["tenant_id"], name: "index_monthly_bills_on_tenant_id"
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.decimal "amount"
+    t.date "old_paid_on"
+    t.string "payment_mode"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "tenant_id", null: false
+    t.bigint "rent_id", null: false
+    t.date "payment_date"
+    t.string "transaction_id"
+    t.string "note"
+    t.index ["rent_id"], name: "index_payments_on_rent_id"
+    t.index ["tenant_id"], name: "index_payments_on_tenant_id"
+  end
+
+  create_table "rents", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.string "month"
+    t.decimal "rent_amount"
+    t.decimal "electricity_share"
+    t.decimal "total_amount"
+    t.decimal "paid_amount", default: "0.0"
+    t.decimal "due_amount"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_rents_on_tenant_id"
+  end
+
+  create_table "tenant_partners", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.string "first_name"
+    t.string "last_name"
+    t.date "dob"
+    t.string "gender"
+    t.string "father_name"
+    t.string "mother_name"
+    t.string "father_contact"
+    t.string "mother_contact"
+    t.string "mobile"
+    t.string "alternate_mobile"
+    t.text "before_rent_address"
+    t.text "permanent_address"
+    t.string "postal_code"
+    t.string "district"
+    t.string "state"
+    t.string "country"
+    t.string "occupation"
+    t.string "occupation_contact"
+    t.text "occupation_address"
+    t.string "document_type"
+    t.string "document_number"
+    t.string "document_file"
+    t.string "profile_photo"
+    t.string "vehicle_no"
+    t.integer "no_of_partners"
+    t.date "rent_start_date"
+    t.date "rent_end_date"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_tenant_partners_on_tenant_id"
+  end
+
+  create_table "tenants", force: :cascade do |t|
+    t.bigint "house_room_id", null: false
+    t.string "first_name"
+    t.string "last_name"
+    t.date "dob"
+    t.string "gender"
+    t.string "father_name"
+    t.string "mother_name"
+    t.string "father_contact"
+    t.string "mother_contact"
+    t.string "mobile"
+    t.string "alternate_mobile"
+    t.text "before_rent_address"
+    t.text "permanent_address"
+    t.string "postal_code"
+    t.string "district"
+    t.string "state"
+    t.string "country"
+    t.string "occupation"
+    t.string "occupation_contact"
+    t.text "occupation_address"
+    t.string "document_type"
+    t.string "document_number"
+    t.string "document_file"
+    t.string "profile_photo"
+    t.string "vehicle_no"
+    t.integer "no_of_partners"
+    t.date "rent_start_date"
+    t.date "rent_end_date"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["house_room_id"], name: "index_tenants_on_house_room_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -82,7 +222,30 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_06_062328) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "utility_bills", force: :cascade do |t|
+    t.bigint "monthly_bill_id", null: false
+    t.string "utility_type"
+    t.decimal "start_unit"
+    t.decimal "end_unit"
+    t.decimal "unit_rate"
+    t.decimal "total_units"
+    t.decimal "amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["monthly_bill_id"], name: "index_utility_bills_on_monthly_bill_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "electricity_bills", "house_rooms"
   add_foreign_key "house_rooms", "houses"
+  add_foreign_key "monthly_bills", "house_rooms"
+  add_foreign_key "monthly_bills", "houses"
+  add_foreign_key "monthly_bills", "tenants"
+  add_foreign_key "payments", "rents"
+  add_foreign_key "payments", "tenants"
+  add_foreign_key "rents", "tenants"
+  add_foreign_key "tenant_partners", "tenants"
+  add_foreign_key "tenants", "house_rooms"
+  add_foreign_key "utility_bills", "monthly_bills"
 end

@@ -1,0 +1,183 @@
+<h2 class="text-2xl font-bold mb-4 text-center">Add Tenant</h2>
+<%= form_with(model: [@house, @house_room, @tenant], local: true, class: "bg-white p-6 rounded shadow-md") do |f| %>
+
+  <!-- Tenant Details -->
+  <div class="grid grid-cols-2 gap-4 mb-6">
+    <!-- Basic Info -->
+    <div>
+      <%= f.label :house_room_id, "Room No.", class: "block font-semibold mb-1" %>
+      <%= f.text_field :house_room_id, 
+            value: @tenant.house_room&.room_number, 
+            placeholder: "house_room_no.", 
+            class: "w-full border rounded px-3 py-2", 
+            readonly: true %>
+    </div>
+    <div>
+      <%= f.label :first_name, class: "block font-semibold mb-1" %>
+      <%= f.text_field :first_name, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= f.label :last_name, class: "block font-semibold mb-1" %>
+      <%= f.text_field :last_name, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= f.label :dob, class: "block font-semibold mb-1" %>
+      <%= f.date_field :dob, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= f.label :gender, class: "block font-semibold mb-1" %>
+      <%= f.text_field :gender, class: "w-full border rounded px-3 py-2" %>
+    </div>
+
+    <!-- Parents -->
+    <div>
+      <%= f.label :father_name, class: "block font-semibold mb-1" %>
+      <%= f.text_field :father_name, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= f.label :mother_name, class: "block font-semibold mb-1" %>
+      <%= f.text_field :mother_name, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= f.label :father_contact, class: "block font-semibold mb-1" %>
+      <%= f.text_field :father_contact, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= f.label :mother_contact, class: "block font-semibold mb-1" %>
+      <%= f.text_field :mother_contact, class: "w-full border rounded px-3 py-2" %>
+    </div>
+
+    <!-- Contact -->
+    <div>
+      <%= f.label :mobile, class: "block font-semibold mb-1" %>
+      <%= f.text_field :mobile, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= f.label :alternate_mobile, class: "block font-semibold mb-1" %>
+      <%= f.text_field :alternate_mobile, class: "w-full border rounded px-3 py-2" %>
+    </div>
+
+    <!-- Addresses -->
+    <div class="col-span-2">
+      <%= f.label :before_rent_address, class: "block font-semibold mb-1" %>
+      <%= f.text_area :before_rent_address, rows: 3, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div class="col-span-2">
+      <%= f.label :permanent_address, class: "block font-semibold mb-1" %>
+      <%= f.text_area :permanent_address, rows: 3, class: "w-full border rounded px-3 py-2" %>
+    </div>
+
+    <!-- Location -->
+    <div>
+      <%= f.label :postal_code, class: "block font-semibold mb-1" %>
+      <%= f.text_field :postal_code, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= f.label :district, class: "block font-semibold mb-1" %>
+      <%= f.text_field :district, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= f.label :state, class: "block font-semibold mb-1" %>
+      <%= f.text_field :state, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= f.label :country, class: "block font-semibold mb-1" %>
+      <%= f.text_field :country, class: "w-full border rounded px-3 py-2" %>
+    </div>
+
+    <!-- Occupation -->
+    <div>
+      <%= f.label :occupation, class: "block font-semibold mb-1" %>
+      <%= f.text_field :occupation, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= f.label :occupation_contact, class: "block font-semibold mb-1" %>
+      <%= f.text_field :occupation_contact, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div class="col-span-2">
+      <%= f.label :occupation_address, class: "block font-semibold mb-1" %>
+      <%= f.text_area :occupation_address, rows: 3, class: "w-full border rounded px-3 py-2" %>
+    </div>
+
+    <!-- Documents -->
+    <div>
+      <%= f.label :document_type, class: "block font-semibold mb-1" %>
+      <%= f.text_field :document_type, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= f.label :document_number, class: "block font-semibold mb-1" %>
+      <%= f.text_field :document_number, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= f.label :document_file, class: "block font-semibold mb-1" %>
+      <%= f.file_field :document_file, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= f.label :profile_photo, class: "block font-semibold mb-1" %>
+      <%= f.file_field :profile_photo, class: "w-full border rounded px-3 py-2" %>
+    </div>
+
+    <!-- Other Details -->
+    <div>
+      <%= f.label :vehicle_no, class: "block font-semibold mb-1" %>
+      <%= f.text_field :vehicle_no, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= f.label :no_of_partners, class: "block font-semibold mb-1" %>
+      <%= f.number_field :no_of_partners, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= f.label :rent_start_date, class: "block font-semibold mb-1" %>
+      <%= f.date_field :rent_start_date, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= f.label :rent_end_date, class: "block font-semibold mb-1" %>
+      <%= f.date_field :rent_end_date, class: "w-full border rounded px-3 py-2" %>
+    </div>
+
+    <!-- Status Dropdown -->
+    <div>
+      <%= f.label :status, class: "block font-semibold mb-1" %>
+      <%= f.select :status, options_for_select([["Active", "active"], ["Inactive", "inactive"], ["Expired", "expired"]], f.object.status), {}, class: "w-full border rounded px-3 py-2" %>
+    </div>
+  </div>
+
+  <!-- Tenant Partners -->
+  <h3 class="text-xl font-bold mb-4">Partners</h3>
+  <div id="partners" class="space-y-4 mb-4">
+  </div>
+
+  <button type="button" id="add-partner"
+          class="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 mb-6">
+    Add Partner
+  </button>
+
+  <!-- Hidden template for dynamic partners -->
+  <div id="partner-template" class="hidden">
+    <%= f.fields_for :tenant_partners, TenantPartner.new do |p| %>
+      <%= render 'partner_fields', p: p %>
+    <% end %>
+  </div>
+
+  <div>
+    <%= f.submit "Create Tenant", class: "px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600" %>
+  </div>
+<% end %>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const addButton = document.getElementById("add-partner");
+    const partnersDiv = document.getElementById("partners");
+    const template = document.getElementById("partner-template").innerHTML;
+
+    addButton.addEventListener("click", () => {
+      partnersDiv.insertAdjacentHTML("beforeend", template);
+    });
+
+    partnersDiv.addEventListener("click", (e) => {
+      if (e.target && e.target.classList.contains("remove-partner")) {
+        e.target.closest(".partner-fields").remove();
+      }
+    });
+  });
+</script>

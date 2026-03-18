@@ -1,0 +1,34 @@
+<h2 class="text-2xl font-bold mb-4">Rent Records for <%= @tenant.full_name %></h2>
+<%= link_to 'Add New Rent', new_tenant_rent_path(@tenant), class: 'bg-blue-600 text-white px-4 py-2 rounded mb-4 inline-block' %>
+<table class="min-w-full bg-white border border-gray-200">
+  <thead>
+    <tr>
+      <th>Month</th>
+      <th>Rent Amount</th>
+      <th>Electricity Share</th>
+      <th>Total Amount</th>
+      <th>Paid Amount</th>
+      <th>Due Amount</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @rents.each do |rent| %>
+      <tr>
+        <td><%= rent.month %></td>
+        <td>₹<%= rent.rent_amount %></td>
+        <td>₹<%= rent.electricity_share %></td>
+        <td>₹<%= rent.total_amount %></td>
+        <td>₹<%= rent.paid_amount %></td>
+        <td>₹<%= rent.due_amount %></td>
+        <td><%= rent.status.capitalize %></td>
+        <td>
+          <%= link_to 'Show', tenant_rent_path(@tenant, rent), class: 'text-blue-600' %> |
+          <%= link_to 'Edit', edit_tenant_rent_path(@tenant, rent), class: 'text-yellow-600' %> |
+          <%= link_to 'Delete', tenant_rent_path(@tenant, rent), method: :delete, data: { confirm: 'Are you sure?' }, class: 'text-red-600' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
