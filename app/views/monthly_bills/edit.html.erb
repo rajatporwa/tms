@@ -1,4 +1,97 @@
-<div>
-  <h1 class="font-bold text-4xl">MonthlyBills#edit</h1>
-  <p>Find me in app/views/monthly_bills/edit.html.erb</p>
+<% content_for :breadcrumbs do %>
+  <%= breadcrumbs([
+    { name: "Houses", path: houses_path },
+    { name: @house.house_name, path: house_path(@house) },
+    { name: "Room #{@house_room.room_number}", path: house_house_room_path(@house, @house_room) },
+    { name: @tenant.full_name, path: house_house_room_tenant_path(@house, @house_room, @tenant) },
+    { name: "Monthly Bills", path: house_house_room_tenant_monthly_bills_path(@house, @house_room, @tenant) },
+    { name: "#{Date::MONTHNAMES[@monthly_bill.month]} #{@monthly_bill.year}", path: house_house_room_tenant_monthly_bill_path(@house, @house_room, @tenant, @monthly_bill) },
+    { name: "Edit" }
+  ]) %>
+<% end %>
+
+<div class="max-w-3xl mx-auto bg-white shadow-xl shadow-blue-900/5 rounded-2xl p-8 border border-gray-100">
+  <div class="mb-8 border-b border-gray-100 pb-5">
+    <h2 class="text-2xl font-bold text-gray-900">Edit Monthly Bill</h2>
+    <p class="text-sm text-gray-500 mt-1">For <%= Date::MONTHNAMES[@monthly_bill.month] %> <%= @monthly_bill.year %></p>
+  </div>
+
+  <div class="bg-blue-50 border border-blue-100 rounded-xl p-6 mb-8 flex justify-between items-center">
+    <div>
+      <p class="text-sm font-medium text-blue-800">Total Bill Amount Computed</p>
+      <p class="text-xs text-blue-600 mt-0.5">Rent + Utilities + Maintenance</p>
+    </div>
+    <div class="text-3xl font-black text-blue-900">
+      ₹<%= @monthly_bill.total_amount || 0 %>
+    </div>
+  </div>
+
+  <%= form_with model: [@house, @house_room, @tenant, @monthly_bill], local: true do |f| %>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-gray-100">
+      <div class="col-span-full mb-2">
+        <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider">Bill Details</h3>
+      </div>
+      <div>
+        <%= f.label :month, class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.select :month, Date::MONTHNAMES.compact.each_with_index.map { |m, i| [m, i+1] }, {}, class: "w-full border border-gray-300 rounded-lg px-3 py-2 bg-white" %>
+      </div>
+      <div>
+        <%= f.label :year, class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.number_field :year, class: "w-full border border-gray-300 rounded-lg px-3 py-2 bg-white" %>
+      </div>
+      <div>
+        <%= f.label :rent_amount, "Base Rent", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.number_field :rent_amount, step: "0.01", class: "w-full border border-gray-300 rounded-lg px-3 py-2 bg-white" %>
+      </div>
+      <div>
+        <%= f.label :maintenance_amount, "Maintenance Amount", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.number_field :maintenance_amount, step: "0.01", class: "w-full border border-gray-300 rounded-lg px-3 py-2 bg-white" %>
+      </div>
+      <div>
+        <%= f.label :due_date, class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.date_field :due_date, class: "w-full border border-gray-300 rounded-lg px-3 py-2 bg-white" %>
+      </div>
+    </div>
+    
+    <div class="mt-8 border-t pt-6 border-gray-100">
+      <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Edit or Add Utilities</h3>
+      <%= f.fields_for :utility_bills do |uf| %>
+        <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-4 shadow-sm relative">
+          <% if uf.object.persisted? %>
+            <div class="absolute top-2 right-2 text-xs flex items-center gap-1">
+              <%= uf.check_box :_destroy, class: "rounded text-red-500 focus:ring-red-500" %>
+              <%= uf.label :_destroy, "Remove", class: "text-red-600 font-medium cursor-pointer" %>
+            </div>
+            <p class="text-xs font-semibold text-indigo-600 mb-3 absolute top-3 left-4 tracking-wide uppercase">Existing Utility</p>
+          <% else %>
+            <p class="text-xs font-semibold text-green-600 mb-3 tracking-wide uppercase">Add New Utility</p>
+          <% end %>
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 <%= uf.object.persisted? ? 'mt-6' : 'mt-2' %>">
+            <div>
+              <%= uf.label :utility_type, "Type", class: "font-semibold block mb-1 text-xs text-gray-700" %>
+              <%= uf.select :utility_type, ["Electricity", "Water", "Gas", "Other"], {}, class: "w-full border border-gray-300 rounded px-2 py-1.5 text-sm" %>
+            </div>
+            <div>
+              <%= uf.label :start_unit, "Start Unit", class: "font-semibold block mb-1 text-xs text-gray-700" %>
+              <%= uf.number_field :start_unit, step: 0.01, class: "w-full border border-gray-300 rounded px-2 py-1.5 text-sm" %>
+            </div>
+            <div>
+              <%= uf.label :end_unit, "End Unit", class: "font-semibold block mb-1 text-xs text-gray-700" %>
+              <%= uf.number_field :end_unit, step: 0.01, class: "w-full border border-gray-300 rounded px-2 py-1.5 text-sm" %>
+            </div>
+            <div>
+              <%= uf.label :unit_rate, "Rate / Unit (₹)", class: "font-semibold block mb-1 text-xs text-gray-700" %>
+              <%= uf.number_field :unit_rate, step: 0.01, class: "w-full border border-gray-300 rounded px-2 py-1.5 text-sm" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <div class="mt-8 flex items-center gap-3">
+      <%= f.submit "Save Bill Updates", class: "bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold shadow-sm hover:bg-blue-700 transition cursor-pointer" %>
+      <%= link_to "Cancel", house_house_room_path(@house, @house_room), class: "px-6 py-3 text-gray-600 font-medium hover:bg-gray-50 rounded-xl transition" %>
+    </div>
+  <% end %>
 </div>

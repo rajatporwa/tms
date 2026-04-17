@@ -1,4 +1,122 @@
-<div>
-  <h1 class="font-bold text-4xl">Dashboard#owner</h1>
-  <p>Find me in app/views/dashboard/owner.html.erb</p>
+<% content_for :breadcrumbs do %>
+  <%= breadcrumbs([
+    { name: "Dashboard" }
+  ]) %>
+<% end %>
+
+<div class="max-w-6xl mx-auto mt-6 px-4 space-y-8">
+
+  <!-- Stats Row -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="bg-white rounded-xl shadow p-5 text-center">
+      <p class="text-3xl font-bold text-blue-600"><%= @total_rooms %></p>
+      <p class="text-gray-500 mt-1">Total Rooms</p>
+    </div>
+    <div class="bg-white rounded-xl shadow p-5 text-center">
+      <p class="text-3xl font-bold text-green-600"><%= @occupied_rooms %></p>
+      <p class="text-gray-500 mt-1">Occupied</p>
+    </div>
+    <div class="bg-white rounded-xl shadow p-5 text-center">
+      <p class="text-3xl font-bold text-yellow-500"><%= @vacant_rooms %></p>
+      <p class="text-gray-500 mt-1">Vacant</p>
+    </div>
+    <div class="bg-white rounded-xl shadow p-5 text-center">
+      <p class="text-3xl font-bold text-red-500">&#8377;<%= number_with_delimiter(@total_pending_amount.to_i) %></p>
+      <p class="text-gray-500 mt-1">Pending Dues</p>
+    </div>
+  </div>
+
+  <!-- Houses -->
+  <% @houses.each do |house| %>
+    <div class="bg-white rounded-xl shadow p-6">
+      <div class="flex justify-between items-start mb-4">
+        <div>
+          <h2 class="text-xl font-bold"><%= house.house_name %></h2>
+          <p class="text-gray-500 text-sm"><%= house.address %></p>
+        </div>
+        <%= link_to "Manage House", house_path(house), class: "bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700" %>
+      </div>
+
+      <!-- Rooms Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% house.house_rooms.order(:room_number).each do |room| %>
+          <div class="border rounded-lg p-4 <%= room.occupied? ? 'border-green-300 bg-green-50' : 'border-gray-200 bg-gray-50' %>">
+            <div class="flex justify-between items-center mb-2">
+              <span class="font-semibold">Room <%= room.room_number %></span>
+              <span class="text-xs px-2 py-1 rounded-full font-semibold
+                <%= room.occupied? ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' %>">
+                <%= room.status.capitalize %>
+              </span>
+            </div>
+            <p class="text-gray-600 text-sm">Rent: &#8377;<%= room.rent %></p>
+
+            <% tenants = room.tenants.order(:first_name) %>
+            <% if tenants.any? %>
+              <% tenants.each do |t| %>
+                <div class="mt-2 flex items-center justify-between">
+                  <p class="text-sm font-medium"><%= t.full_name %></p>
+                  <% due = t.rents.where.not(status: 'paid').sum(:due_amount) %>
+                  <% if due > 0 %>
+                    <span class="text-xs text-red-600 font-semibold">Due: &#8377;<%= due.to_i %></span>
+                  <% end %>
+                </div>
+                <div class="flex gap-2 mt-1">
+                  <%= link_to "View Tenant", house_house_room_tenant_path(house, room, t), class: "text-xs text-blue-600 hover:underline" %>
+                  <%= link_to "Rents", house_house_room_tenant_rents_path(house, room, t), class: "text-xs text-indigo-600 hover:underline" %>
+                </div>
+              <% end %>
+            <% else %>
+              <p class="text-xs text-gray-400 mt-2">No tenant assigned.</p>
+              <%= link_to "Add Tenant", new_house_house_room_tenant_path(house, room), class: "text-xs text-blue-600 hover:underline mt-1 inline-block" %>
+            <% end %>
+
+            <div class="mt-3 flex gap-2">
+              <%= link_to "Edit Room", edit_house_house_room_path(house, room), class: "text-xs text-gray-600 hover:underline" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Add Room -->
+      <div class="mt-4">
+        <%= link_to "+ Add Room", new_house_house_room_path(house), class: "text-sm text-blue-600 hover:underline" %>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Pending Rents Summary -->
+  <% if @pending_rents.any? %>
+    <div class="bg-white rounded-xl shadow p-6">
+      <h2 class="text-xl font-bold mb-4 text-red-600">Pending Dues Summary</h2>
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-4 py-2 text-left text-sm font-semibold">Tenant</th>
+            <th class="px-4 py-2 text-left text-sm font-semibold">Month</th>
+            <th class="px-4 py-2 text-right text-sm font-semibold">Total</th>
+            <th class="px-4 py-2 text-right text-sm font-semibold">Due</th>
+            <th class="px-4 py-2 text-center text-sm font-semibold">Status</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <% @pending_rents.includes(:tenant).each do |rent| %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-4 py-3 font-medium"><%= rent.tenant.full_name %></td>
+              <td class="px-4 py-3"><%= rent.month %></td>
+              <td class="px-4 py-3 text-right">&#8377;<%= rent.total_amount %></td>
+              <td class="px-4 py-3 text-right font-semibold text-red-600">&#8377;<%= rent.due_amount %></td>
+              <td class="px-4 py-3 text-center">
+                <span class="px-2 py-1 rounded text-xs font-semibold
+                  <%= rent.status == 'partial' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700' %>">
+                  <%= rent.status.capitalize %>
+                </span>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+
 </div>
+

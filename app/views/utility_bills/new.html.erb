@@ -1,5 +1,16 @@
+<% content_for :breadcrumbs do %>
+  <%= breadcrumbs([
+    { name: "Houses", path: houses_path },
+    { name: @house.house_name, path: house_path(@house) },
+    { name: "Room #{@house_room.room_number}", path: house_house_room_path(@house, @house_room) },
+    { name: @tenant.full_name, path: house_house_room_tenant_path(@house, @house_room, @tenant) },
+    { name: "Monthly Bills", path: house_house_room_tenant_monthly_bills_path(@house, @house_room, @tenant) },
+    { name: "#{Date::MONTHNAMES[@monthly_bill.month]} #{@monthly_bill.year}", path: house_house_room_tenant_monthly_bill_path(@house, @house_room, @tenant, @monthly_bill) },
+    { name: "Add Utility" }
+  ]) %>
+<% end %>
+
 <div class="max-w-2xl mx-auto bg-white shadow rounded-lg p-6">
-  <h2 class="text-xl font-bold mb-4">Add Utility</h2>
 
   <%= form_with model: [@house, @house_room, @tenant, @monthly_bill, @utility_bill], local: true do |f| %>
 
@@ -8,7 +19,7 @@
       <div>
         <%= f.label :utility_type, class: "font-semibold" %>
         <%= f.select :utility_type,
-          ["Electricity", "Water", "Gas", "Internet"],
+          ["Electricity", "Water", "Others"],
           {}, class: "w-full border rounded px-3 py-2" %>
       </div>
 

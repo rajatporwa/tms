@@ -1,30 +1,73 @@
-<h2 class="text-2xl font-bold mb-4">Payments for <%= @tenant.full_name %> - <%= @rent.month %></h2>
-<%= link_to 'Add Payment', new_tenant_rent_payment_path(@tenant, @rent), class: 'bg-blue-600 text-white px-4 py-2 rounded mb-4 inline-block' %>
-<table class="min-w-full bg-white border border-gray-200">
-  <thead>
-    <tr>
-      <th>Amount</th>
-      <th>Date</th>
-      <th>Mode</th>
-      <th>Transaction ID</th>
-      <th>Note</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @payments.each do |payment| %>
-      <tr>
-        <td>₹<%= payment.amount %></td>
-        <td><%= payment.payment_date %></td>
-        <td><%= payment.payment_mode %></td>
-        <td><%= payment.transaction_id %></td>
-        <td><%= payment.note %></td>
-        <td>
-          <%= link_to 'Show', tenant_rent_payment_path(@tenant, @rent, payment), class: 'text-blue-600' %> |
-          <%= link_to 'Edit', edit_tenant_rent_payment_path(@tenant, @rent, payment), class: 'text-yellow-600' %> |
-          <%= link_to 'Delete', tenant_rent_payment_path(@tenant, @rent, payment), method: :delete, data: { confirm: 'Are you sure?' }, class: 'text-red-600' %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<% content_for :breadcrumbs do %>
+  <%= breadcrumbs([
+    { name: "Houses", path: houses_path },
+    { name: @house.house_name, path: house_path(@house) },
+    { name: "Room #{@house_room.room_number}", path: house_house_room_path(@house, @house_room) },
+    { name: @tenant.full_name, path: house_house_room_tenant_path(@house, @house_room, @tenant) },
+    { name: "Rents", path: house_house_room_tenant_rents_path(@house, @house_room, @tenant) },
+    { name: @rent.month, path: house_house_room_tenant_rent_path(@house, @house_room, @tenant, @rent) },
+    { name: "Payments" }
+  ]) %>
+<% end %>
+
+<div class="max-w-4xl mx-auto mt-6">
+  <div class="flex justify-between items-center mb-4">
+    <div>
+      <h2 class="text-2xl font-bold">Payments &mdash; <%= @tenant.full_name %></h2>
+      <p class="text-gray-500 text-sm">Rent Month: <%= @rent.month %></p>
+    </div>
+    <%= link_to '+ Add Payment',
+          new_house_house_room_tenant_rent_payment_path(@house, @house_room, @tenant, @rent),
+          class: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700' %>
+  </div>
+
+  <% if @payments.any? %>
+    <table class="min-w-full bg-white rounded-xl shadow divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-4 py-3 text-left text-sm font-semibold">Date</th>
+          <th class="px-4 py-3 text-right text-sm font-semibold">Amount</th>
+          <th class="px-4 py-3 text-left text-sm font-semibold">Mode</th>
+          <th class="px-4 py-3 text-left text-sm font-semibold">Transaction ID</th>
+          <th class="px-4 py-3 text-left text-sm font-semibold">Note</th>
+          <th class="px-4 py-3"></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <% @payments.each do |payment| %>
+          <tr class="hover:bg-gray-50">
+            <td class="px-4 py-3"><%= payment.payment_date %></td>
+            <td class="px-4 py-3 text-right font-semibold">&#8377;<%= payment.amount %></td>
+            <td class="px-4 py-3"><%= payment.payment_mode %></td>
+            <td class="px-4 py-3 text-gray-500"><%= payment.transaction_id.presence || "—" %></td>
+            <td class="px-4 py-3 text-gray-500"><%= payment.note.presence || "—" %></td>
+            <td class="px-4 py-3 whitespace-nowrap">
+              <%= link_to 'View',
+                    house_house_room_tenant_rent_payment_path(@house, @house_room, @tenant, @rent, payment),
+                    class: 'text-blue-600 hover:underline mr-2' %>
+              <%= link_to 'Edit',
+                    edit_house_house_room_tenant_rent_payment_path(@house, @house_room, @tenant, @rent, payment),
+                    class: 'text-yellow-600 hover:underline mr-2' %>
+              <%= button_to 'Delete',
+                    house_house_room_tenant_rent_payment_path(@house, @house_room, @tenant, @rent, payment),
+                    method: :delete,
+                    data: { confirm: 'Delete this payment?' },
+                    class: 'text-red-600 hover:underline bg-transparent border-0 cursor-pointer' %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <div class="text-center py-10 bg-white rounded-xl shadow">
+      <p class="text-gray-400 mb-3">No payments recorded yet.</p>
+      <%= link_to "Add First Payment",
+            new_house_house_room_tenant_rent_payment_path(@house, @house_room, @tenant, @rent),
+            class: "bg-blue-600 text-white px-5 py-2 rounded" %>
+    </div>
+  <% end %>
+
+  <%= link_to "\u2190 Back to Rent",
+        house_house_room_tenant_rent_path(@house, @house_room, @tenant, @rent),
+        class: "mt-4 inline-block text-blue-600 hover:underline" %>
+</div>

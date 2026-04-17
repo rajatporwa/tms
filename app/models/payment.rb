@@ -1,15 +1,23 @@
 class Payment < ApplicationRecord
   belongs_to :tenant
-  belongs_to :rent
+  belongs_to :rent, optional: true
+  belongs_to :monthly_bill, optional: true
 
   validates :amount, :payment_date, :payment_mode, presence: true
 
-  after_save :update_rent_status
+  after_save :update_associated_statuses
+  after_destroy :update_associated_statuses
 
   PAYMENT_MODES = %w[cash UPI bank]
 
-  def update_rent_status
-    rent.update_paid_and_due_amounts!
+  def update_associated_statuses
+    rent.update_paid_and_due_amounts! if rent.present?
+    
+    if monthly_bill.present?
+      monthly_bill.update(paid_amount: monthly_bill.payments.sum(:amount))
+      monthly_bill.calculate_totals
+      monthly_bill.save
+    end
   end
 
   def upi_qr_code_url

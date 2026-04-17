@@ -1,6 +1,6 @@
 class PaymentsController < ApplicationController
-  before_action :set_tenant
-  before_action :set_rent
+  before_action :authenticate_user!
+  before_action :set_context
   before_action :set_payment, only: [:show, :edit, :update, :destroy]
 
   def index
@@ -11,14 +11,14 @@ class PaymentsController < ApplicationController
   end
 
   def new
-    @payment = @rent.payments.new
+    @payment = @rent.payments.new(payment_date: Date.today)
   end
 
   def create
     @payment = @rent.payments.new(payment_params)
     @payment.tenant = @tenant
     if @payment.save
-      redirect_to tenant_rent_payments_path(@tenant, @rent), notice: 'Payment recorded.'
+      redirect_to house_house_room_tenant_rent_path(@house, @house_room, @tenant, @rent), notice: 'Payment recorded.'
     else
       render :new
     end
@@ -29,7 +29,7 @@ class PaymentsController < ApplicationController
 
   def update
     if @payment.update(payment_params)
-      redirect_to tenant_rent_payments_path(@tenant, @rent), notice: 'Payment updated.'
+      redirect_to house_house_room_tenant_rent_path(@house, @house_room, @tenant, @rent), notice: 'Payment updated.'
     else
       render :edit
     end
@@ -37,17 +37,16 @@ class PaymentsController < ApplicationController
 
   def destroy
     @payment.destroy
-    redirect_to tenant_rent_payments_path(@tenant, @rent), notice: 'Payment deleted.'
+    redirect_to house_house_room_tenant_rent_path(@house, @house_room, @tenant, @rent), notice: 'Payment deleted.'
   end
 
   private
 
-  def set_tenant
-    @tenant = Tenant.find(params[:tenant_id])
-  end
-
-  def set_rent
-    @rent = @tenant.rents.find(params[:rent_id])
+  def set_context
+    @house      = current_user.houses.find(params[:house_id])
+    @house_room = @house.house_rooms.find(params[:house_room_id])
+    @tenant     = @house_room.tenants.find(params[:tenant_id])
+    @rent       = @tenant.rents.find(params[:rent_id])
   end
 
   def set_payment

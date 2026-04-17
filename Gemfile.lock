@@ -116,7 +116,6 @@ GEM
     debug (1.10.0)
       irb (~> 1.10)
       reline (>= 0.3.8)
-    device (0.0.0)
     devise (4.9.4)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -405,7 +404,6 @@ DEPENDENCIES
   byebug
   capybara
   debug
-  device
   devise (~> 4.9)
   image_processing (~> 1.2)
   importmap-rails

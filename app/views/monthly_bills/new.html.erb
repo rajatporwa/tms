@@ -1,3 +1,14 @@
+<% content_for :breadcrumbs do %>
+  <%= breadcrumbs([
+    { name: "Houses", path: houses_path },
+    { name: @house.house_name, path: house_path(@house) },
+    { name: "Room #{@house_room.room_number}", path: house_house_room_path(@house, @house_room) },
+    { name: @tenant.full_name, path: house_house_room_tenant_path(@house, @house_room, @tenant) },
+    { name: "Monthly Bills", path: house_house_room_tenant_monthly_bills_path(@house, @house_room, @tenant) },
+    { name: "New Bill" }
+  ]) %>
+<% end %>
+
 <div class="max-w-3xl mx-auto bg-white shadow rounded-lg p-6">
   <h2 class="text-2xl font-bold mb-6 text-center">Create Monthly Bill</h2>
 
@@ -36,7 +47,34 @@
       </div>
     </div>
 
-    <div class="mt-6 text-center">
+    <!-- Utilities Section -->
+    <div class="mt-8 border-t pt-6">
+      <h3 class="text-xl font-bold text-gray-800 mb-4">Add Utilities</h3>
+      <%= f.fields_for :utility_bills do |uf| %>
+        <div class="bg-gray-50 p-5 rounded-xl border border-gray-200 mb-4">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+              <%= uf.label :utility_type, "Utility Type", class: "font-semibold block mb-1 text-sm text-gray-700" %>
+              <%= uf.select :utility_type, ["Electricity", "Water", "Gas", "Other"], {}, class: "w-full border rounded-lg px-3 py-2 text-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+            </div>
+            <div>
+              <%= uf.label :start_unit, "Start Unit", class: "font-semibold block mb-1 text-sm text-gray-700" %>
+              <%= uf.number_field :start_unit, step: 0.01, class: "w-full border rounded-lg px-3 py-2 text-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+            </div>
+            <div>
+              <%= uf.label :end_unit, "End Unit", class: "font-semibold block mb-1 text-sm text-gray-700" %>
+              <%= uf.number_field :end_unit, step: 0.01, class: "w-full border rounded-lg px-3 py-2 text-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+            </div>
+            <div>
+              <%= uf.label :unit_rate, "Rate / Unit (₹)", class: "font-semibold block mb-1 text-sm text-gray-700" %>
+              <%= uf.number_field :unit_rate, step: 0.01, class: "w-full border rounded-lg px-3 py-2 text-sm focus:ring-indigo-500 focus:border-indigo-500" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mt-8 text-center">
       <%= f.submit "Create Bill",
         class: "bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700" %>
     </div>

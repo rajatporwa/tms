@@ -1,38 +1,57 @@
 class HouseRoomsController < ApplicationController
-	before_action :authenticate_user!
-	before_action :set_room, only: %i[ show edit update]
+  before_action :authenticate_user!
+  before_action :set_house
+  before_action :set_room, only: %i[show edit update destroy]
 
-	def index
-		@house_rooms = HouseRoom.all
-	end
+  def index
+    @house_rooms = @house.house_rooms.order(:room_number)
+  end
 
-	def new
-		@houseroom = HouseRoom.new
-	end
+  def new
+    @house_room = @house.house_rooms.new
+  end
 
-	def create
-		
-	end
+  def create
+    @house_room = @house.house_rooms.new(room_params)
+    if @house_room.save
+      redirect_to house_path(@house), notice: "Room created successfully."
+    else
+      render :new, status: :unprocessable_entity
+    end
+  end
 
-	def edit
-	end
+  def edit
+  end
 
-	def update
-	end
+  def update
+    if @house_room.update(room_params)
+      redirect_to house_house_room_path(@house, @house_room), notice: "Room updated."
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
 
-	def show
-	end
+  def show
+    @tenants = @house_room.tenants.order(created_at: :desc)
+    @active_tenant = @house_room.tenants.find_by(status: 'active')
+  end
 
-	def destroy
-	end
+  def destroy
+    @house_room.destroy
+    redirect_to house_path(@house), notice: "Room deleted."
+  end
 
-	private
+  private
 
-	def set_room
-		@room  = Room.find(params[:id])
-	end
+  def set_house
+    @house = current_user.houses.find(params[:house_id])
+  end
 
-	def room_params
-		params.expect(room: [ :house_id :room_number, :rent, :status, :month_of_rent, :previous_month_electricity_reading, :current_month_electricity_reading, :electricity_bill, :total_amount, :paid_status ])
-	end
+  def set_room
+    @house_room = @house.house_rooms.find(params[:id])
+  end
+
+  def room_params
+    params.require(:house_room).permit(:room_number, :rent, :status)
+  end
 end

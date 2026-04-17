@@ -1,5 +1,6 @@
 class RentsController < ApplicationController
-  before_action :set_tenant, only: [:new, :create, :index]
+  before_action :authenticate_user!
+  before_action :set_context
   before_action :set_rent, only: [:show, :edit, :update, :destroy]
 
   def index
@@ -10,13 +11,13 @@ class RentsController < ApplicationController
   end
 
   def new
-    @rent = @tenant.rents.new
+    @rent = @tenant.rents.new(rent_amount: @house_room.rent)
   end
 
   def create
     @rent = @tenant.rents.new(rent_params)
     if @rent.save
-      redirect_to tenant_rents_path(@tenant), notice: 'Rent record created.'
+      redirect_to house_house_room_tenant_rents_path(@house, @house_room, @tenant), notice: 'Rent record created.'
     else
       render :new
     end
@@ -27,7 +28,7 @@ class RentsController < ApplicationController
 
   def update
     if @rent.update(rent_params)
-      redirect_to tenant_rents_path(@rent.tenant), notice: 'Rent record updated.'
+      redirect_to house_house_room_tenant_rent_path(@house, @house_room, @tenant, @rent), notice: 'Rent record updated.'
     else
       render :edit
     end
@@ -35,17 +36,19 @@ class RentsController < ApplicationController
 
   def destroy
     @rent.destroy
-    redirect_to tenant_rents_path(@rent.tenant), notice: 'Rent record deleted.'
+    redirect_to house_house_room_tenant_rents_path(@house, @house_room, @tenant), notice: 'Rent record deleted.'
   end
 
   private
 
-  def set_tenant
-    @tenant = Tenant.find(params[:tenant_id])
+  def set_context
+    @house      = current_user.houses.find(params[:house_id])
+    @house_room = @house.house_rooms.find(params[:house_room_id])
+    @tenant     = @house_room.tenants.find(params[:tenant_id])
   end
 
   def set_rent
-    @rent = Rent.find(params[:id])
+    @rent = @tenant.rents.find(params[:id])
   end
 
   def rent_params

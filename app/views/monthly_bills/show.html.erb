@@ -1,3 +1,14 @@
+<% content_for :breadcrumbs do %>
+  <%= breadcrumbs([
+    { name: "Houses", path: houses_path },
+    { name: @house.house_name, path: house_path(@house) },
+    { name: "Room #{@house_room.room_number}", path: house_house_room_path(@house, @house_room) },
+    { name: @tenant.full_name, path: house_house_room_tenant_path(@house, @house_room, @tenant) },
+    { name: "Monthly Bills", path: house_house_room_tenant_monthly_bills_path(@house, @house_room, @tenant) },
+    { name: "#{Date::MONTHNAMES[@monthly_bill.month]} #{@monthly_bill.year}" }
+  ]) %>
+<% end %>
+
 <div class="max-w-4xl mx-auto space-y-6">
 
   <div class="bg-white shadow rounded p-6">
@@ -21,14 +32,22 @@
     </div>
   </div>
 
-  <div class="text-center space-x-4">
+  <div class="flex flex-wrap gap-3 justify-center">
     <%= link_to "Add Utility",
       new_house_house_room_tenant_monthly_bill_utility_bill_path(@house, @house_room, @tenant, @monthly_bill),
       class: "bg-indigo-500 text-white px-4 py-2 rounded" %>
 
-    <%= link_to "Add Payment",
-      new_house_house_room_tenant_monthly_bill_payment_path(@house, @house_room, @tenant, @monthly_bill),
-      class: "bg-green-500 text-white px-4 py-2 rounded" %>
+    <%= link_to "View Utility Bills",
+      house_house_room_tenant_monthly_bill_utility_bills_path(@house, @house_room, @tenant, @monthly_bill),
+      class: "bg-blue-500 text-white px-4 py-2 rounded" %>
+
+    <%= link_to "Edit Bill",
+      edit_house_house_room_tenant_monthly_bill_path(@house, @house_room, @tenant, @monthly_bill),
+      class: "bg-yellow-500 text-white px-4 py-2 rounded" %>
+
+    <%= link_to "\u2190 Back to Bills",
+      house_house_room_tenant_monthly_bills_path(@house, @house_room, @tenant),
+      class: "bg-gray-500 text-white px-4 py-2 rounded" %>
   </div>
 
 </div>

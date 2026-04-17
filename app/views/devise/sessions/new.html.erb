@@ -1,25 +1,67 @@
-<div class="bg-gray-100 text-gray-900 mt-40 flex items-center justify-center">
-  <div class="bg-white p-8 rounded shadow-md w-[30%]">
-    <h2 class="text-2xl font-bold mb-6 text-center">Login to TMS</h2>
-
-    <%= form_with scope: :user, url: session_path(:user), local: true do |f| %>
-      <div class="mb-4">
-        <%= f.label :email, class: "block text-gray-700" %>
-        <%= f.email_field :email, required: true, autofocus: true, class: "mt-1 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300" %>
+<div class="min-h-[85vh] flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-50/50">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="flex justify-center">
+      <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-600/30 transform -rotate-6 transition-transform hover:rotate-0 duration-300">
+        <span class="text-3xl font-extrabold text-white transform rotate-6 hover:rotate-0 transition-transform duration-300">T</span>
       </div>
+    </div>
+    <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 tracking-tight">
+      Sign in to TMS
+    </h2>
+    <p class="mt-2 text-center text-sm text-gray-600">
+      Manage your properties with ease
+    </p>
+  </div>
 
-      <div class="mb-6">
-        <%= f.label :password, class: "block text-gray-700" %>
-        <%= f.password_field :password, required: true, class: "mt-1 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300" %>
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="bg-white py-8 px-4 shadow-xl shadow-gray-200/50 sm:rounded-2xl sm:px-10 border border-gray-100">
+      <%= form_with scope: :user, url: session_path(:user), local: true, class: "space-y-6" do |f| %>
+        <div>
+          <%= f.label :email, class: "block text-sm font-medium text-gray-700" %>
+          <div class="mt-1">
+            <%= f.email_field :email, required: true, autofocus: true, autocomplete: "email", class: "appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors" %>
+          </div>
+        </div>
+
+        <div>
+          <%= f.label :password, class: "block text-sm font-medium text-gray-700" %>
+          <div class="mt-1">
+            <%= f.password_field :password, required: true, autocomplete: "current-password", class: "appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors" %>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <%= f.check_box :remember_me, class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer" %>
+            <%= f.label :remember_me, class: "ml-2 block text-sm text-gray-900 cursor-pointer" %>
+          </div>
+
+          <div class="text-sm">
+            <%= link_to "Forgot your password?", new_password_path(resource_name), class: "font-medium text-blue-600 hover:text-blue-500 transition-colors" %>
+          </div>
+        </div>
+
+        <div>
+          <%= f.submit "Sign in", class: "w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors cursor-pointer" %>
+        </div>
+      <% end %>
+
+      <div class="mt-8">
+        <div class="relative">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-200"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="px-3 bg-white text-gray-500 font-medium">
+              New to TMS?
+            </span>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <%= link_to "Create new account", new_user_registration_path, class: "w-full flex justify-center py-3 px-4 border border-gray-300 rounded-xl shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors" %>
+        </div>
       </div>
-
-      <%= f.submit "Log in", class: "w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700" %>
-    <% end %>
-
-    <div class="mt-4 text-center">
-      <%= link_to "Don't have an account? Sign up", new_user_registration_path, class: "text-blue-600 hover:underline" %>
-      <br>
-      <%= link_to "Forgot your password?", new_password_path(resource_name), class: "text-blue-600 hover:underline" %>
     </div>
   </div>
 </div>

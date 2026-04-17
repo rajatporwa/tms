@@ -1,0 +1,46 @@
+<% content_for :breadcrumbs do %>
+  <%= breadcrumbs([
+    { name: "Houses", path: houses_path },
+    { name: @house.house_name, path: house_path(@house) },
+    { name: "Room #{@house_room.room_number}", path: house_house_room_path(@house, @house_room) },
+    { name: @tenant.full_name, path: house_house_room_tenant_path(@house, @house_room, @tenant) },
+    { name: "Monthly Bills", path: house_house_room_tenant_monthly_bills_path(@house, @house_room, @tenant) },
+    { name: "#{Date::MONTHNAMES[@monthly_bill.month]} #{@monthly_bill.year}", path: house_house_room_tenant_monthly_bill_path(@house, @house_room, @tenant, @monthly_bill) },
+    { name: "Utilities" }
+  ]) %>
+<% end %>
+
+<div class="max-w-3xl mx-auto mt-6">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-bold">Utility Bills</h2>
+    <%= link_to "Add Utility", new_house_house_room_tenant_monthly_bill_utility_bill_path(@house, @house_room, @tenant, @monthly_bill),
+          class: "bg-blue-600 text-white px-4 py-2 rounded" %>
+  </div>
+  <table class="min-w-full bg-white rounded-xl shadow divide-y divide-gray-200">
+    <thead class="bg-gray-50">
+      <tr>
+        <th class="px-4 py-3 text-left text-sm font-semibold">Type</th>
+        <th class="px-4 py-3 text-right text-sm font-semibold">Units Used</th>
+        <th class="px-4 py-3 text-right text-sm font-semibold">Rate</th>
+        <th class="px-4 py-3 text-right text-sm font-semibold">Amount</th>
+        <th class="px-4 py-3"></th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-100">
+      <% @utility_bills.each do |ub| %>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-3"><%= ub.utility_type %></td>
+          <td class="px-4 py-3 text-right"><%= ub.total_units %></td>
+          <td class="px-4 py-3 text-right">&#8377;<%= ub.unit_rate %></td>
+          <td class="px-4 py-3 text-right font-semibold">&#8377;<%= ub.amount %></td>
+          <td class="px-4 py-3">
+            <%= link_to "Edit", edit_house_house_room_tenant_monthly_bill_utility_bill_path(@house, @house_room, @tenant, @monthly_bill, ub), class: "text-yellow-600 hover:underline mr-2" %>
+            <%= button_to "Delete", house_house_room_tenant_monthly_bill_utility_bill_path(@house, @house_room, @tenant, @monthly_bill, ub), method: :delete,
+                  data: { confirm: "Delete this entry?" }, class: "text-red-600 hover:underline bg-transparent border-0 cursor-pointer" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to "&larr; Back to Bill".html_safe, house_house_room_tenant_monthly_bill_path(@house, @house_room, @tenant, @monthly_bill), class: "mt-4 inline-block text-blue-600 hover:underline" %>
+</div>

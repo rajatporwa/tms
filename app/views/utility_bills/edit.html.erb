@@ -1,4 +1,40 @@
-<div>
-  <h1 class="font-bold text-4xl">UtilityBills#edit</h1>
-  <p>Find me in app/views/utility_bills/edit.html.erb</p>
+<% content_for :breadcrumbs do %>
+  <%= breadcrumbs([
+    { name: "Houses", path: houses_path },
+    { name: @house.house_name, path: house_path(@house) },
+    { name: "Room #{@house_room.room_number}", path: house_house_room_path(@house, @house_room) },
+    { name: @tenant.full_name, path: house_house_room_tenant_path(@house, @house_room, @tenant) },
+    { name: "Monthly Bills", path: house_house_room_tenant_monthly_bills_path(@house, @house_room, @tenant) },
+    { name: "#{Date::MONTHNAMES[@monthly_bill.month]} #{@monthly_bill.year}", path: house_house_room_tenant_monthly_bill_path(@house, @house_room, @tenant, @monthly_bill) },
+    { name: "Edit Utility" }
+  ]) %>
+<% end %>
+
+<div class="max-w-2xl mx-auto bg-white shadow rounded-lg p-6">
+  <%= form_with model: [@house, @house_room, @tenant, @monthly_bill, @utility_bill], local: true do |f| %>
+    <div class="space-y-4">
+      <div>
+        <%= f.label :utility_type, class: "font-semibold" %>
+        <%= f.select :utility_type, ["Electricity", "Water", "Others"], {}, class: "w-full border rounded px-3 py-2" %>
+      </div>
+      <div class="grid grid-cols-3 gap-3">
+        <div>
+          <%= f.label :start_unit %>
+          <%= f.number_field :start_unit, step: "0.01", class: "w-full border rounded px-3 py-2" %>
+        </div>
+        <div>
+          <%= f.label :end_unit %>
+          <%= f.number_field :end_unit, step: "0.01", class: "w-full border rounded px-3 py-2" %>
+        </div>
+        <div>
+          <%= f.label :unit_rate %>
+          <%= f.number_field :unit_rate, step: "0.01", class: "w-full border rounded px-3 py-2" %>
+        </div>
+      </div>
+    </div>
+    <div class="mt-6 flex gap-3">
+      <%= f.submit "Update", class: "bg-green-600 text-white px-5 py-2 rounded cursor-pointer" %>
+      <%= link_to "Cancel", house_house_room_tenant_monthly_bill_path(@house, @house_room, @tenant, @monthly_bill), class: "border px-5 py-2 rounded text-gray-600" %>
+    </div>
+  <% end %>
 </div>

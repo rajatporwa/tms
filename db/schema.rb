@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_20_123000) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_15_112941) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -68,6 +68,17 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_20_123000) do
     t.index ["house_room_id"], name: "index_electricity_bills_on_house_room_id"
   end
 
+  create_table "expenses", force: :cascade do |t|
+    t.bigint "house_id", null: false
+    t.string "expense_type"
+    t.decimal "amount"
+    t.text "description"
+    t.date "expense_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["house_id"], name: "index_expenses_on_house_id"
+  end
+
   create_table "house_rooms", force: :cascade do |t|
     t.bigint "house_id", null: false
     t.integer "room_number"
@@ -116,10 +127,12 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_20_123000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "tenant_id", null: false
-    t.bigint "rent_id", null: false
+    t.bigint "rent_id"
     t.date "payment_date"
     t.string "transaction_id"
     t.string "note"
+    t.bigint "monthly_bill_id"
+    t.index ["monthly_bill_id"], name: "index_payments_on_monthly_bill_id"
     t.index ["rent_id"], name: "index_payments_on_rent_id"
     t.index ["tenant_id"], name: "index_payments_on_tenant_id"
   end
@@ -235,13 +248,26 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_20_123000) do
     t.index ["monthly_bill_id"], name: "index_utility_bills_on_monthly_bill_id"
   end
 
+  create_table "vehicles", force: :cascade do |t|
+    t.string "vehicle_name"
+    t.string "vehicle_no"
+    t.string "owner_type", null: false
+    t.bigint "owner_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "vehicle_type"
+    t.index ["owner_type", "owner_id"], name: "index_vehicles_on_owner"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "electricity_bills", "house_rooms"
+  add_foreign_key "expenses", "houses"
   add_foreign_key "house_rooms", "houses"
   add_foreign_key "monthly_bills", "house_rooms"
   add_foreign_key "monthly_bills", "houses"
   add_foreign_key "monthly_bills", "tenants"
+  add_foreign_key "payments", "monthly_bills"
   add_foreign_key "payments", "rents"
   add_foreign_key "payments", "tenants"
   add_foreign_key "rents", "tenants"

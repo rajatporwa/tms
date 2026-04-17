@@ -1,108 +1,79 @@
-<div class="grid grid-cols-2 gap-4 relative border p-4 rounded bg-gray-50">
-  <div>
-    <%= p.label :first_name, class: "block font-semibold mb-1" %>
-    <%= p.text_field :first_name, class: "w-full border rounded px-3 py-2" %>
-  </div>
-  <div>
-    <%= p.label :last_name, class: "block font-semibold mb-1" %>
-    <%= p.text_field :last_name, class: "w-full border rounded px-3 py-2" %>
-  </div>
-  <div>
-    <%= p.label :dob, class: "block font-semibold mb-1" %>
-    <%= p.date_field :dob, class: "w-full border rounded px-3 py-2" %>
-  </div>
-  <div>
-    <%= p.label :gender, class: "block font-semibold mb-1" %>
-    <%= p.text_field :gender, class: "w-full border rounded px-3 py-2" %>
-  </div>
-  <!-- Parents -->
-  <div>
-    <%= p.label :father_name, class: "block font-semibold mb-1" %>
-    <%= p.text_field :father_name, class: "w-full border rounded px-3 py-2" %>
-  </div>
-  <div>
-    <%= p.label :mother_name, class: "block font-semibold mb-1" %>
-    <%= p.text_field :mother_name, class: "w-full border rounded px-3 py-2" %>
-  </div>
-  <div>
-    <%= p.label :father_contact, class: "block font-semibold mb-1" %>
-    <%= p.text_field :father_contact, class: "w-full border rounded px-3 py-2" %>
-  </div>
-  <div>
-    <%= p.label :mother_contact, class: "block font-semibold mb-1" %>
-    <%= p.text_field :mother_contact, class: "w-full border rounded px-3 py-2" %>
-  </div>
-  <!-- contacts -->
-  <div>
-    <%= p.label :mobile, class: "block font-semibold mb-1" %>
-    <%= p.text_field :mobile, class: "w-full border rounded px-3 py-2" %>
-  </div>
-  <div>
-    <%= p.label :alternate_mobile, class: "block font-semibold mb-1" %>
-    <%= p.text_field :alternate_mobile, class: "w-full border rounded px-3 py-2" %>
-  </div>
-   <!-- Addresses -->
-    <div class="col-span-2">
-      <%= p.label :before_rent_address, class: "block font-semibold mb-1" %>
-      <%= p.text_area :before_rent_address, rows: 3, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div class="col-span-2">
-      <%= p.label :permanent_address, class: "block font-semibold mb-1" %>
-      <%= p.text_area :permanent_address, rows: 3, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <!-- Location -->
-    <div>
-      <%= p.label :postal_code, class: "block font-semibold mb-1" %>
-      <%= p.text_field :postal_code, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div>
-      <%= p.label :district, class: "block font-semibold mb-1" %>
-      <%= p.text_field :district, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div>
-      <%= p.label :state, class: "block font-semibold mb-1" %>
-      <%= p.text_field :state, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div>
-      <%= p.label :country, class: "block font-semibold mb-1" %>
-      <%= p.text_field :country, class: "w-full border rounded px-3 py-2" %>
-    </div>
-
-    <!-- Occupation -->
-    <div>
-      <%= p.label :occupation, class: "block font-semibold mb-1" %>
-      <%= p.text_field :occupation, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div>
-      <%= p.label :occupation_contact, class: "block font-semibold mb-1" %>
-      <%= p.text_field :occupation_contact, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div class="col-span-2">
-      <%= p.label :occupation_address, class: "block font-semibold mb-1" %>
-      <%= p.text_area :occupation_address, rows: 3, class: "w-full border rounded px-3 py-2" %>
-    </div>
-
-    <!-- Documents -->
-    <div>
-      <%= p.label :document_type, class: "block font-semibold mb-1" %>
-      <%= p.text_field :document_type, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div>
-      <%= p.label :document_number, class: "block font-semibold mb-1" %>
-      <%= p.text_field :document_number, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div>
-      <%= p.label :document_file, class: "block font-semibold mb-1" %>
-      <%= p.file_field :document_file, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div>
-      <%= p.label :profile_photo, class: "block font-semibold mb-1" %>
-      <%= p.file_field :profile_photo, class: "w-full border rounded px-3 py-2" %>
-    </div>
-
-
-  <button type="button"
-          class="remove-partner absolute top-2 right-2 text-red-500 hover:text-red-700 font-bold">
-    Remove
+<div class="partner-fields bg-purple-50/30 border border-purple-100 rounded-3xl p-8 relative mb-6 shadow-sm group">
+  <button type="button" class="remove-partner absolute top-4 right-4 bg-white text-red-500 hover:bg-red-50 hover:text-red-600 font-bold border border-red-100 rounded-full w-8 h-8 flex items-center justify-center transition shadow-sm opacity-50 group-hover:opacity-100" title="Remove Partner">
+    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
   </button>
+
+  <h4 class="text-lg font-bold text-gray-900 mb-6 flex items-center">
+    <span class="w-8 h-8 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center mr-3">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+    </span>
+    Partner Details
+  </h4>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Basic Info -->
+    <div>
+      <%= p.label :first_name, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+      <%= p.text_field :first_name, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 bg-white" %>
+    </div>
+    <div>
+      <%= p.label :last_name, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+      <%= p.text_field :last_name, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 bg-white" %>
+    </div>
+    <div>
+      <%= p.label :dob, "Date of Birth", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+      <%= p.date_field :dob, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 bg-white" %>
+    </div>
+    <div>
+      <%= p.label :gender, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+      <%= p.select :gender, [["Male", "male"], ["Female", "female"], ["Other", "other"]], {include_blank: "Select"}, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 bg-white" %>
+    </div>
+    <div>
+      <%= p.label :mobile, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+      <%= p.text_field :mobile, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 bg-white" %>
+    </div>
+    <div>
+      <%= p.label :alternate_mobile, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+      <%= p.text_field :alternate_mobile, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 bg-white" %>
+    </div>
+
+    <!-- Family -->
+    <div class="col-span-1 md:col-span-2 lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6 mt-2 pt-6 border-t border-purple-100/50">
+      <div>
+        <%= p.label :father_name, "Guardian/Father Name", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+        <%= p.text_field :father_name, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 bg-white" %>
+      </div>
+      <div>
+        <%= p.label :father_contact, "Guardian/Father Contact", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+        <%= p.text_field :father_contact, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 bg-white" %>
+      </div>
+    </div>
+
+    <!-- Location & Occ -->
+    <div class="col-span-1 md:col-span-2 lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6 mt-2 pt-6 border-t border-purple-100/50">
+      <div>
+        <%= p.label :permanent_address, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+        <%= p.text_area :permanent_address, rows: 2, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 bg-white" %>
+      </div>
+      <div>
+        <%= p.label :occupation, "Occupation / School", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+        <%= p.text_field :occupation, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 bg-white mb-4" %>
+        
+        <%= p.label :document_number, "ID Document No.", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+        <%= p.text_field :document_number, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 bg-white" %>
+      </div>
+    </div>
+
+    <!-- Uploads -->
+    <div class="col-span-1 md:col-span-2 lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+      <div class="p-4 bg-white rounded-2xl border border-gray-200">
+        <%= p.label :document_file, "Upload ID Document", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2" %>
+        <%= p.file_field :document_file, class: "w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100" %>
+      </div>
+      <div class="p-4 bg-white rounded-2xl border border-gray-200">
+        <%= p.label :profile_photo, "Upload Profile Photo", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2" %>
+        <%= p.file_field :profile_photo, class: "w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" %>
+      </div>
+    </div>
+  </div>
 </div>

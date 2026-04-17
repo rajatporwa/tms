@@ -1,127 +1,249 @@
-<div class="bg-white rounded-2xl shadow p-6 mb-6">
-  <h2 class="text-2xl font-bold text-gray-800 mb-2 text-center">
-    <%= @house.house_name %>
-  </h2>
+<% content_for :breadcrumbs do %>
+  <%= breadcrumbs([
+    { name: "Houses", path: houses_path },
+    { name: @house.house_name }
+  ]) %>
+<% end %>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-gray-600">
-    <p><span class="font-semibold">Address:</span> <%= @house.address %></p>
-    <p><span class="font-semibold">Owner:</span> <%= @house.owner_name %></p>
-    <p><span class="font-semibold">Total Rooms:</span> <%= @house.no_of_rooms %></p>
+<div class="bg-white rounded-2xl shadow p-6 mb-8 border border-gray-100">
+  <div class="flex flex-col md:flex-row justify-between items-center pb-4 border-b border-gray-100 mb-6 gap-4">
+    <h2 class="text-3xl font-bold text-gray-900">
+      <%= @house.house_name %>
+    </h2>
+    <div class="flex gap-2">
+      <%= link_to new_house_expense_path(@house), class: "bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2 rounded-lg font-bold transition-colors border border-red-200 text-sm flex items-center shadow-sm" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        Log Expense
+      <% end %>
+      <%= link_to edit_house_path(@house), class: "bg-blue-50 text-blue-600 hover:bg-blue-100 px-4 py-2 rounded-lg font-medium transition-colors border border-blue-200 text-sm flex items-center" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+        </svg>
+        Edit Property Details
+      <% end %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-sm text-gray-600">
+    <!-- House Expenses -->
+    <div class="flex flex-col p-4 bg-orange-50/50 rounded-xl border border-orange-100">
+      <span class="text-orange-500 text-[10px] font-black uppercase tracking-widest mb-1.5">House Expenses (Month)</span>
+      <span class="text-2xl font-black text-orange-700 mb-2">₹<%= @monthly_expenses_total.to_i %></span>
+      <div class="flex items-center text-xs font-bold text-orange-600 mt-auto">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 flex-shrink-0" style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        Spent by Owner
+      </div>
+    </div>
+
+    <!-- Occupancy -->
+    <div class="flex flex-col p-4 bg-indigo-50/50 rounded-xl border border-indigo-100">
+      <span class="text-indigo-400 text-[10px] font-black uppercase tracking-widest mb-1.5">Occupancy Rate</span>
+      <div class="flex items-end gap-2 mb-2">
+        <span class="text-2xl font-black text-indigo-700"><%= @occupied_rooms %></span>
+        <span class="text-sm font-bold text-indigo-400 mb-1">/ <%= @house.no_of_rooms %> Rooms</span>
+      </div>
+      <div class="flex items-center text-xs font-bold text-indigo-600 bg-indigo-100/50 w-fit px-2 py-0.5 rounded mt-auto">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 flex-shrink-0" style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+        <%= @total_active_tenants %> Total Tenants
+      </div>
+    </div>
+
+    <!-- Expected Rent -->
+    <div class="flex flex-col p-4 bg-green-50/50 rounded-xl border border-green-100">
+      <span class="text-green-500 text-[10px] font-black uppercase tracking-widest mb-1.5">Expected Monthly Rent</span>
+      <span class="text-2xl font-black text-green-700 mb-2">₹<%= @total_rent_expected.to_i %></span>
+      <span class="text-xs font-bold text-green-600 flex items-center mt-auto">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 flex-shrink-0" style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        From occupied rooms
+      </span>
+    </div>
+
+    <!-- Pending Dues -->
+    <div class="flex flex-col p-4 bg-red-50/50 rounded-xl border border-red-100">
+      <span class="text-red-400 text-[10px] font-black uppercase tracking-widest mb-1.5">Total Pending Dues</span>
+      <span class="text-2xl font-black text-red-600 mb-2">₹<%= @pending_dues.to_i %></span>
+      <span class="text-xs font-bold text-red-500 flex items-center mt-auto">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 flex-shrink-0" style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        Overdue balances
+      </span>
+    </div>
   </div>
 </div>
 
-<div class="bg-white rounded-2xl shadow overflow-hidden">
-  <table class="min-w-full text-sm">
-
-    <!-- Header -->
-    <thead class="bg-black text-white">
-      <tr>
-        <th class="px-4 py-3 text-left font-semibold">Room</th>
-        <th class="px-4 py-3 text-center font-semibold">Rent</th>
-        <th class="px-4 py-3 text-left font-semibold">Tenant</th>
-        <th class="px-4 py-3 text-center font-semibold">Start Date</th>
-        <th class="px-4 py-3 text-center font-semibold">Mobile</th>
-        <th class="px-4 py-3 text-center font-semibold">Partners</th>
-        <th class="px-4 py-3 text-center font-semibold">Status</th>
-      </tr>
-    </thead>
-
-    <!-- Body -->
-    <tbody class="divide-y divide-gray-200">
-      <% (1..@house.no_of_rooms).each_with_index do |i, index| %>
-        <% room = @house.house_rooms.find_by(room_number: i) %>
-        <% tenant = room&.tenants&.last %>
-
-        <tr
-          class="
-            <%= index.even? ? 'bg-gray-100' : 'bg-white' %>
-            hover:bg-gray-200 transition cursor-pointer
-          "
-          data-url="<%= tenant.present? ? house_house_room_tenant_path(@house, room, tenant) : new_house_house_room_tenant_path(@house, room) %>">
-
-          <td class="px-4 py-3 font-semibold text-gray-800">
-            Room <%= i %>
-          </td>
-
-          <td class="px-4 py-3 text-center">
-            <%= room ? "₹#{room.rent}" : "—" %>
-          </td>
-
-          <td class="px-4 py-3">
-            <%= tenant&.full_name || "—" %>
-          </td>
-
-          <td class="px-4 py-3 text-center">
-            <%= tenant&.rent_start_date || "—" %>
-          </td>
-
-          <td class="px-4 py-3 text-center">
-            <%= tenant&.mobile || "—" %>
-          </td>
-
-          <td class="px-4 py-3 text-center">
-            <%= tenant ? tenant.tenant_partners.size : "—" %>
-          </td>
-
-         <td class="px-4 py-3 text-center space-y-2">
-
-          <% if tenant.present? %>
-
-            <span class="inline-block px-3 py-1 rounded-full bg-red-100 text-red-700 font-medium">
-              Occupied
-            </span>
-
-            <div class="flex flex-col gap-1 text-xs">
-
-              <%= link_to "Monthly Bill",
-                house_house_room_tenant_monthly_bills_path(@house, room, tenant),
-                class: "text-indigo-600 hover:underline" %>
-
-              <%= link_to "Add Utility",
-                new_house_house_room_tenant_monthly_bill_utility_bill_path(
-                  @house,
-                  room,
-                  tenant,
-                  tenant.monthly_bills.last
-                ),
-                class: "text-yellow-600 hover:underline" if tenant.monthly_bills.any? %>
-
-              <%= link_to "Payments",
-                house_house_room_tenant_monthly_bill_payments_path(
-                  @house,
-                  room,
-                  tenant,
-                  tenant.monthly_bills.last
-                ),
-                class: "text-green-600 hover:underline" if tenant.monthly_bills.any? %>
-
-            </div>
-
-          <% else %>
-
-            <span class="px-3 py-1 rounded-full bg-purple-100 text-purple-700 font-medium">
-              Vacant
-            </span>
-
-          <% end %>
-
-        </td>
-
-        </tr>
-      <% end %>
-    </tbody>
-
-  </table>
+<div class="mb-4 px-1">
+  <h3 class="text-xl font-bold text-gray-900">Rooms Overview</h3>
+  <p class="text-sm text-gray-500 mt-1">Manage tenants, track bills, and quick actions.</p>
 </div>
 
+<div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="min-w-full text-sm text-left">
+      <thead class="bg-gray-50 border-b border-gray-200 text-gray-600 uppercase text-[10px] font-black tracking-widest">
+        <tr>
+          <th class="px-6 py-4">Room No.</th>
+          <th class="px-6 py-4 text-center">Status</th>
+          <th class="px-6 py-4">Current Tenant</th>
+          <th class="px-6 py-4 text-center">Rent</th>
+          <th class="px-6 py-4 text-right">Quick Actions</th>
+        </tr>
+      </thead>
 
+      <tbody class="divide-y divide-gray-100">
+        <% (1..@house.no_of_rooms).each_with_index do |i, index| %>
+          <% room = @house.house_rooms.find_by(room_number: i) %>
+          <% tenant = room&.tenants&.find_by(status: 'active') %>
+          
+          <tr class="hover:bg-blue-50/50 transition duration-150 group">
+            
+            <td class="px-6 py-4 whitespace-nowrap cursor-pointer" onclick="window.location='<%= house_house_room_path(@house, room) if room %>'">
+              <div class="flex items-center">
+                <div class="h-8 w-8 rounded bg-blue-100 text-blue-600 flex items-center justify-center font-bold mr-3 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                  <%= i %>
+                </div>
+                <span class="font-medium text-gray-900">Room <%= i %></span>
+              </div>
+            </td>
 
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll("tr[data-url]").forEach(row => {
-      row.addEventListener("click", () => {
-        window.location = row.dataset.url
-      })
-    })
-  })
-</script>
+            <td class="px-6 py-4 whitespace-nowrap text-center cursor-pointer" onclick="window.location='<%= house_house_room_path(@house, room) if room %>'">
+              <% if tenant.present? %>
+                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-50 text-red-700 border border-red-200">
+                  <span class="h-1.5 w-1.5 bg-red-500 rounded-full mr-1.5 line-ping"></span>
+                  Occupied
+                </span>
+              <% else %>
+                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-green-50 text-green-700 border border-green-200">
+                  <span class="h-1.5 w-1.5 bg-green-500 rounded-full mr-1.5"></span>
+                  Vacant
+                </span>
+              <% end %>
+            </td>
+
+            <td class="px-6 py-4 whitespace-nowrap cursor-pointer" onclick="window.location='<%= house_house_room_path(@house, room) if room %>'">
+              <% if tenant.present? %>
+                <% member_count = 1 + tenant.tenant_partners.count %>
+                <div class="flex flex-col">
+                  <span class="font-bold text-gray-900"><%= tenant.full_name %></span>
+                  <span class="text-xs text-gray-500 mt-0.5"><%= tenant.mobile %></span>
+                  <span class="inline-flex items-center mt-1 text-[10px] font-black uppercase tracking-widest text-indigo-600 bg-indigo-50 border border-indigo-100 rounded px-1.5 py-0.5 w-fit">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" style="width:12px;height:12px" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                    <%= member_count %> <%= member_count == 1 ? 'Member' : 'Members' %>
+                  </span>
+                </div>
+              <% else %>
+                <span class="text-gray-400 text-xs font-semibold italic">No active tenant</span>
+              <% end %>
+            </td>
+
+            <td class="px-6 py-4 whitespace-nowrap text-center font-bold text-gray-700">
+              <%= room ? "₹#{room.rent}" : "—" %>
+            </td>
+
+            <td class="px-6 py-4 whitespace-nowrap text-right">
+              <% if room %>
+                 <div class="flex items-center justify-end gap-2 flex-nowrap whitespace-nowrap">
+                   <% if tenant.present? %>
+                     <%= link_to new_house_house_room_tenant_monthly_bill_path(@house, room, tenant), class: "inline-flex items-center text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-lg px-2.5 py-1.5 hover:bg-indigo-600 hover:text-white transition duration-150 shadow-sm" do %>
+                       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 flex-shrink-0" style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                       Bill
+                     <% end %>
+                     
+                     <div class="inline-block">
+                       <%= button_to vacate_house_house_room_tenant_path(@house, room, tenant), method: :patch, data: { turbo_confirm: "Are you sure you want to mark #{tenant.first_name} as vacated? This will free up the room today." }, class: "inline-flex items-center text-xs font-bold text-red-600 bg-red-50 border border-red-200 rounded-lg px-2.5 py-1.5 hover:bg-red-600 hover:text-white transition duration-150 shadow-sm cursor-pointer" do %>
+                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 flex-shrink-0" style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+                         Vacate
+                       <% end %>
+                     </div>
+                   <% else %>
+                     <%= link_to new_house_house_room_tenant_path(@house, room), class: "inline-flex items-center text-xs font-bold text-green-700 bg-green-50 border border-green-200 rounded-lg px-2.5 py-1.5 hover:bg-green-600 hover:text-white transition duration-150 shadow-sm" do %>
+                       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 flex-shrink-0" style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>
+                       Add Tenant
+                     <% end %>
+                   <% end %>
+                   
+                   <%= link_to house_house_room_path(@house, room), class: "inline-flex items-center text-xs font-bold text-gray-600 bg-white border border-gray-300 rounded-lg shadow-sm px-2.5 py-1.5 hover:bg-gray-50 hover:text-gray-900 transition duration-150" do %>
+                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0" style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                   <% end %>
+                 </div>
+              <% else %>
+                 <span class="text-gray-300 text-sm">Room missing</span>
+              <% end %>
+            </td>
+
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="mt-8 mb-4 px-1">
+  <h3 class="text-xl font-bold text-gray-900">Recent House Expenses</h3>
+  <p class="text-sm text-gray-500 mt-1">Track maintenance, electricity, and water bills paid by owner.</p>
+</div>
+
+<div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+  <% if @recent_expenses.any? %>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm text-left">
+        <thead class="bg-orange-50 border-b border-orange-100 text-orange-700 uppercase text-[10px] font-black tracking-widest">
+          <tr>
+            <th class="px-6 py-4">Date</th>
+            <th class="px-6 py-4 text-center">Category</th>
+            <th class="px-6 py-4">Description</th>
+            <th class="px-6 py-4 text-right">Amount</th>
+            <th class="px-6 py-4 text-right">Action</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <% @recent_expenses.each do |expense| %>
+            <tr class="hover:bg-gray-50 transition duration-150">
+              <td class="px-6 py-4 whitespace-nowrap text-gray-500 font-medium"><%= expense.expense_date.strftime("%d %b %Y") %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-gray-100 text-gray-700">
+                  <%= expense.expense_type %>
+                </span>
+              </td>
+              <td class="px-6 py-4 text-gray-900"><%= expense.description.presence || "<em class='text-gray-400 font-normal'>No note provided</em>".html_safe %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-right font-black text-red-600">₹<%= expense.amount %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-right">
+                <div class="inline-block">
+                  <%= button_to house_expense_path(@house, expense), method: :delete, data: { turbo_confirm: "Delete this ₹#{expense.amount} #{expense.expense_type} expense? This cannot be undone." }, class: "inline-flex items-center text-xs font-bold text-red-500 bg-red-50 border border-red-200 rounded-lg px-2 py-1.5 hover:bg-red-600 hover:text-white transition duration-150 shadow-sm cursor-pointer" do %>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" style="width:14px;height:14px" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="p-8 text-center">
+      <div class="mx-auto w-12 h-12 bg-gray-50 border border-gray-200 text-gray-400 rounded-full flex items-center justify-center mb-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
+      </div>
+      <p class="text-gray-500 font-medium">No expenses logged yet.</p>
+    </div>
+  <% end %>
+</div>
+<style>
+  .line-ping {
+    animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+  @keyframes ping {
+    75%, 100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+</style>

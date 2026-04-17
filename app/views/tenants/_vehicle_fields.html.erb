@@ -1,0 +1,26 @@
+<div class="vehicle-fields bg-blue-50/50 p-4 rounded-xl border border-blue-100 mb-3 relative group">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div>
+      <%= f.label :vehicle_type, "Vehicle Type", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1" %>
+      <%= f.select :vehicle_type, ["2 Wheeler", "4 Wheeler", "Cycle", "Other"], {include_blank: "Select Type"}, class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500 bg-white" %>
+    </div>
+    <div>
+      <%= f.label :vehicle_name, "Vehicle Name / Model", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1" %>
+      <%= f.text_field :vehicle_name, placeholder: "e.g. Honda Activa, Swift", class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500" %>
+    </div>
+    <div>
+      <%= f.label :vehicle_no, "Vehicle Number", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1" %>
+      <%= f.text_field :vehicle_no, placeholder: "e.g. MP09 AB 1234", class: "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm font-mono focus:ring-blue-500 focus:border-blue-500 uppercase" %>
+    </div>
+  </div>
+  <% if f.object.persisted? %>
+    <div class="mt-2 flex items-center gap-2">
+      <%= f.check_box :_destroy, class: "rounded text-red-500 focus:ring-red-500" %>
+      <%= f.label :_destroy, "Remove this vehicle", class: "text-xs font-bold text-red-600 uppercase cursor-pointer" %>
+    </div>
+  <% else %>
+    <button type="button" class="remove-vehicle absolute -top-2 -right-2 bg-white border border-red-200 text-red-500 rounded-full p-1 opacity-0 group-hover:opacity-100 transition shadow-sm hover:bg-red-50" title="Remove">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+  <% end %>
+</div>

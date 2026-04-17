@@ -1,0 +1,40 @@
+<% content_for :breadcrumbs do %>
+  <%= breadcrumbs([
+    { name: "Houses", path: houses_path },
+    { name: @house.house_name, path: house_path(@house) },
+    { name: "New Room" }
+  ]) %>
+<% end %>
+
+<div class="max-w-lg mx-auto mt-8"> — <%= @house.house_name %></h2>
+
+  <%= form_with model: [@house, @house_room], local: true, class: "bg-white rounded-xl shadow p-6 space-y-4" do |f| %>
+    <% if @house_room.errors.any? %>
+      <div class="bg-red-50 border border-red-300 text-red-700 rounded p-3">
+        <% @house_room.errors.full_messages.each do |msg| %>
+          <p><%= msg %></p>
+        <% end %>
+      </div>
+    <% end %>
+
+    <div>
+      <%= f.label :room_number, "Room Number", class: "block font-semibold mb-1" %>
+      <%= f.number_field :room_number, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+    </div>
+
+    <div>
+      <%= f.label :rent, "Monthly Rent (₹)", class: "block font-semibold mb-1" %>
+      <%= f.number_field :rent, step: "0.01", class: "w-full border border-gray-300 rounded px-3 py-2" %>
+    </div>
+
+    <div>
+      <%= f.label :status, class: "block font-semibold mb-1" %>
+      <%= f.select :status, [["Vacant", "vacant"], ["Occupied", "occupied"]], {}, class: "w-full border border-gray-300 rounded px-3 py-2" %>
+    </div>
+
+    <div class="flex gap-3 pt-2">
+      <%= f.submit "Create Room", class: "bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 cursor-pointer" %>
+      <%= link_to "Cancel", house_path(@house), class: "text-gray-600 px-5 py-2 rounded border hover:bg-gray-50" %>
+    </div>
+  <% end %>
+</div>

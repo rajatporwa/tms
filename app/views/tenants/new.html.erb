@@ -1,182 +1,269 @@
-<h2 class="text-2xl font-bold mb-4 text-center">Add Tenant</h2>
-<%= form_with(model: [@house, @house_room, @tenant], local: true, class: "bg-white p-6 rounded shadow-md") do |f| %>
+<% content_for :breadcrumbs do %>
+  <%= breadcrumbs([
+    { name: "Houses", path: houses_path },
+    { name: @house.house_name, path: house_path(@house) },
+    { name: "Room #{@house_room.room_number}", path: house_house_room_path(@house, @house_room) },
+    { name: "Add Tenant" }
+  ]) %>
+<% end %>
 
-  <!-- Tenant Details -->
-  <div class="grid grid-cols-2 gap-4 mb-6">
-    <!-- Basic Info -->
-    <div>
-      <%= f.label :house_room_id, "Room No.", class: "block font-semibold mb-1" %>
-      <%= f.text_field :house_room_id, 
-            value: @tenant.house_room&.room_number, 
-            placeholder: "house_room_no.", 
-            class: "w-full border rounded px-3 py-2", 
-            readonly: true %>
-    </div>
-    <div>
-      <%= f.label :first_name, class: "block font-semibold mb-1" %>
-      <%= f.text_field :first_name, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div>
-      <%= f.label :last_name, class: "block font-semibold mb-1" %>
-      <%= f.text_field :last_name, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div>
-      <%= f.label :dob, class: "block font-semibold mb-1" %>
-      <%= f.date_field :dob, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div>
-      <%= f.label :gender, class: "block font-semibold mb-1" %>
-      <%= f.text_field :gender, class: "w-full border rounded px-3 py-2" %>
+<div class="max-w-5xl mx-auto py-8">
+  <div class="bg-white shadow-xl shadow-blue-900/5 rounded-3xl overflow-hidden border border-gray-100">
+    <div class="bg-gradient-to-r from-blue-600 to-indigo-700 px-8 py-6 mb-8">
+      <h2 class="text-2xl font-bold text-white">Add New Tenant</h2>
+      <p class="text-blue-100 text-sm mt-1">Register a new tenant for Room <%= @house_room.room_number %></p>
     </div>
 
-    <!-- Parents -->
-    <div>
-      <%= f.label :father_name, class: "block font-semibold mb-1" %>
-      <%= f.text_field :father_name, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div>
-      <%= f.label :mother_name, class: "block font-semibold mb-1" %>
-      <%= f.text_field :mother_name, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div>
-      <%= f.label :father_contact, class: "block font-semibold mb-1" %>
-      <%= f.text_field :father_contact, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div>
-      <%= f.label :mother_contact, class: "block font-semibold mb-1" %>
-      <%= f.text_field :mother_contact, class: "w-full border rounded px-3 py-2" %>
-    </div>
+    <%= form_with(model: [@house, @house_room, @tenant], local: true, class: "px-8 pb-8") do |f| %>
+      <% if @tenant.errors.any? %>
+        <div class="bg-red-50 border border-red-200 text-red-700 rounded-xl p-4 mb-8 text-sm">
+          <p class="font-bold mb-1">Please fix the following errors:</p>
+          <ul class="list-disc list-inside">
+            <% @tenant.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
 
-    <!-- Contact -->
-    <div>
-      <%= f.label :mobile, class: "block font-semibold mb-1" %>
-      <%= f.text_field :mobile, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div>
-      <%= f.label :alternate_mobile, class: "block font-semibold mb-1" %>
-      <%= f.text_field :alternate_mobile, class: "w-full border rounded px-3 py-2" %>
-    </div>
+      <!-- Basic Specs -->
+      <h3 class="text-lg font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2">Room & Lease Details</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div>
+          <%= f.label :house_room_id, "Room No.", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_field :house_room_id, value: @tenant.house_room&.room_number, class: "w-full border border-gray-300 rounded-xl px-4 py-3 bg-gray-50 text-gray-500 cursor-not-allowed", readonly: true %>
+        </div>
+        <div>
+          <%= f.label :rent_start_date, "Rent Start Date", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.date_field :rent_start_date, value: Date.today, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" %>
+        </div>
+        <div>
+          <%= f.label :rent_end_date, "Rent End Date", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.date_field :rent_end_date, class: "w-full border border-gray-300 rounded-xl px-4 py-3 bg-gray-50 text-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition", placeholder: "Auto-filled on vacate" %>
+          <p class="text-[11px] text-gray-400 mt-1 ml-1">Auto-set when tenant vacates</p>
+        </div>
+        <div>
+          <%= f.label :status, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.select :status, [["Active", "active"], ["Inactive", "inactive"], ["Vacated", "vacated"]], {selected: "active"}, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 bg-white" %>
+        </div>
+      </div>
 
-    <!-- Addresses -->
-    <div class="col-span-2">
-      <%= f.label :before_rent_address, class: "block font-semibold mb-1" %>
-      <%= f.text_area :before_rent_address, rows: 3, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div class="col-span-2">
-      <%= f.label :permanent_address, class: "block font-semibold mb-1" %>
-      <%= f.text_area :permanent_address, rows: 3, class: "w-full border rounded px-3 py-2" %>
-    </div>
+      <!-- Personal Info -->
+      <h3 class="text-lg font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2">Personal Information</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div>
+          <%= f.label :first_name, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_field :first_name, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500" %>
+        </div>
+        <div>
+          <%= f.label :last_name, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_field :last_name, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500" %>
+        </div>
+        <div>
+          <%= f.label :dob, "Date of Birth", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.date_field :dob, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500" %>
+        </div>
+        <div>
+          <%= f.label :gender, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.select :gender, [["Male", "male"], ["Female", "female"], ["Other", "other"]], {include_blank: "Select"}, class: "w-full border border-gray-300 rounded-xl px-4 py-3 bg-white focus:ring-2 focus:ring-blue-500" %>
+        </div>
+        <div>
+          <%= f.label :mobile, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_field :mobile, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500" %>
+        </div>
+        <div>
+          <%= f.label :alternate_mobile, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_field :alternate_mobile, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500" %>
+        </div>
+      </div>
 
-    <!-- Location -->
-    <div>
-      <%= f.label :postal_code, class: "block font-semibold mb-1" %>
-      <%= f.text_field :postal_code, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div>
-      <%= f.label :district, class: "block font-semibold mb-1" %>
-      <%= f.text_field :district, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div>
-      <%= f.label :state, class: "block font-semibold mb-1" %>
-      <%= f.text_field :state, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div>
-      <%= f.label :country, class: "block font-semibold mb-1" %>
-      <%= f.text_field :country, class: "w-full border rounded px-3 py-2" %>
-    </div>
+      <!-- Family Info -->
+      <h3 class="text-lg font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2">Family Information</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="col-span-1 lg:col-span-2">
+          <%= f.label :father_name, "Father/Guardian Name", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_field :father_name, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500" %>
+        </div>
+        <div class="col-span-1 lg:col-span-2">
+          <%= f.label :father_contact, "Father/Guardian Contact", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_field :father_contact, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500" %>
+        </div>
+        <div class="col-span-1 lg:col-span-2">
+          <%= f.label :mother_name, "Mother Name", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_field :mother_name, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500" %>
+        </div>
+        <div class="col-span-1 lg:col-span-2">
+          <%= f.label :mother_contact, "Mother Contact", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_field :mother_contact, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500" %>
+        </div>
+      </div>
 
-    <!-- Occupation -->
-    <div>
-      <%= f.label :occupation, class: "block font-semibold mb-1" %>
-      <%= f.text_field :occupation, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div>
-      <%= f.label :occupation_contact, class: "block font-semibold mb-1" %>
-      <%= f.text_field :occupation_contact, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div class="col-span-2">
-      <%= f.label :occupation_address, class: "block font-semibold mb-1" %>
-      <%= f.text_area :occupation_address, rows: 3, class: "w-full border rounded px-3 py-2" %>
-    </div>
+      <!-- Addresses & Location -->
+      <h3 class="text-lg font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2">Addresses & Location</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div>
+          <%= f.label :permanent_address, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_area :permanent_address, rows: 3, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500" %>
+        </div>
+        <div>
+          <%= f.label :before_rent_address, "Previous Residential Address", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_area :before_rent_address, rows: 3, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500" %>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+        <div>
+          <%= f.label :postal_code, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_field :postal_code, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500" %>
+        </div>
+        <div>
+          <%= f.label :district, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_field :district, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500" %>
+        </div>
+        <div>
+          <%= f.label :state, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_field :state, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500" %>
+        </div>
+        <div>
+          <%= f.label :country, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_field :country, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500" %>
+        </div>
+      </div>
 
-    <!-- Documents -->
-    <div>
-      <%= f.label :document_type, class: "block font-semibold mb-1" %>
-      <%= f.text_field :document_type, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div>
-      <%= f.label :document_number, class: "block font-semibold mb-1" %>
-      <%= f.text_field :document_number, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div>
-      <%= f.label :document_file, class: "block font-semibold mb-1" %>
-      <%= f.file_field :document_file, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div>
-      <%= f.label :profile_photo, class: "block font-semibold mb-1" %>
-      <%= f.file_field :profile_photo, class: "w-full border rounded px-3 py-2" %>
-    </div>
+      <!-- Occupation -->
+      <h3 class="text-lg font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2">Occupation / College</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div>
+          <%= f.label :occupation, "Occupation / School", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_field :occupation, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500" %>
+        </div>
+        <div>
+          <%= f.label :occupation_contact, "Work/College Contact", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_field :occupation_contact, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500" %>
+        </div>
+        <div class="md:col-span-2 lg:col-span-1">
+          <%= f.label :occupation_address, "Work/College Address", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_field :occupation_address, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500" %>
+        </div>
+      </div>
 
-    <!-- Other Details -->
-    <div>
-      <%= f.label :vehicle_no, class: "block font-semibold mb-1" %>
-      <%= f.text_field :vehicle_no, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div>
-      <%= f.label :no_of_partners, class: "block font-semibold mb-1" %>
-      <%= f.number_field :no_of_partners, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div>
-      <%= f.label :rent_start_date, class: "block font-semibold mb-1" %>
-      <%= f.date_field :rent_start_date, class: "w-full border rounded px-3 py-2" %>
-    </div>
-    <div>
-      <%= f.label :rent_end_date, class: "block font-semibold mb-1" %>
-      <%= f.date_field :rent_end_date, class: "w-full border rounded px-3 py-2" %>
-    </div>
+      <!-- Documents -->
+      <h3 class="text-lg font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2">Identity & Documents</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div>
+          <%= f.label :document_type, "Document Type (e.g. Aadhar)", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_field :document_type, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500" %>
+        </div>
+        <div>
+          <%= f.label :document_number, "Document ID Number", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_field :document_number, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500" %>
+        </div>
+        <div class="p-4 bg-gray-50 rounded-2xl border border-gray-200">
+          <%= f.label :document_file, "Upload ID Document", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2" %>
+          <%= f.file_field :document_file, class: "w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" %>
+        </div>
+        <div class="p-4 bg-gray-50 rounded-2xl border border-gray-200">
+          <%= f.label :profile_photo, "Upload Profile Photo", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2" %>
+          <%= f.file_field :profile_photo, class: "w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" %>
+        </div>
+      </div>
 
-    <!-- Status Dropdown -->
-    <div>
-      <%= f.label :status, class: "block font-semibold mb-1" %>
-      <%= f.select :status, options_for_select([["Active", "active"], ["Inactive", "inactive"], ["Expired", "expired"]], f.object.status), {}, class: "w-full border rounded px-3 py-2" %>
-    </div>
-  </div>
+      <!-- Multiple Vehicles Section -->
+      <div class="mt-8 pt-8 border-t border-gray-100">
+        <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+          <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mr-4">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+          </div>
+          Manage Vehicles
+        </h3>
+        
+        <div id="tenant-vehicles" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <%= f.fields_for :vehicles do |v| %>
+            <%= render 'vehicle_fields', f: v %>
+          <% end %>
+        </div>
+        
+        <button type="button" id="add-tenant-vehicle" class="mt-6 inline-flex items-center px-6 py-3 bg-blue-50 text-blue-700 font-bold rounded-xl hover:bg-blue-100 transition shadow-sm">
+          <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+          Add New Vehicle
+        </button>
+      </div>
 
-  <!-- Tenant Partners -->
-  <h3 class="text-xl font-bold mb-4">Partners</h3>
-  <div id="partners" class="space-y-4 mb-4">
-  </div>
+      <!-- Partners Section -->
+      <div class="mt-12 pt-8 border-t border-gray-100">
+        <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+          <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mr-4">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          </div>
+          Living Partners
+        </h3>
+        
+        <div id="partners" class="space-y-6 mb-6">
+        </div>
 
-  <button type="button" id="add-partner"
-          class="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 mb-6">
-    Add Partner
-  </button>
+        <button type="button" id="add-partner" class="inline-flex items-center px-6 py-3 bg-purple-50 text-purple-700 font-bold rounded-xl hover:bg-purple-100 transition shadow-sm">
+          <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+          Add Partner
+        </button>
+      </div>
 
-  <!-- Hidden template for dynamic partners -->
-  <div id="partner-template" class="hidden">
-    <%= f.fields_for :tenant_partners, TenantPartner.new do |p| %>
-      <%= render 'partner_fields', p: p %>
+      <!-- Actions -->
+      <div class="mt-12 pt-8 border-t border-gray-100 flex flex-col md:flex-row items-center gap-4">
+        <%= f.submit "Register Tenant", class: "w-full md:w-auto px-12 py-4 bg-green-600 text-white rounded-2xl font-black text-lg shadow-lg shadow-green-200 hover:bg-green-700 hover:shadow-xl transition-all cursor-pointer" %>
+        <%= link_to "Cancel", house_house_room_path(@house, @house_room), class: "w-full md:w-auto px-8 py-4 text-center text-gray-500 font-bold hover:text-gray-700 transition" %>
+      </div>
+
+      <!-- Hidden templates for dynamic fields -->
+      <div id="partner-template" class="hidden">
+        <%= f.fields_for :tenant_partners, TenantPartner.new, child_index: "P_INDEX" do |p| %>
+          <%= render 'partner_fields', p: p %>
+        <% end %>
+      </div>
+
+      <div id="vehicle-template" class="hidden">
+        <%= f.fields_for :vehicles, Vehicle.new, child_index: "V_INDEX" do |v| %>
+          <%= render 'vehicle_fields', f: v %>
+        <% end %>
+      </div>
+
     <% end %>
   </div>
-
-  <div>
-    <%= f.submit "Create Tenant", class: "px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600" %>
-  </div>
-<% end %>
+</div>
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    const addButton = document.getElementById("add-partner");
+    // Partner addition
+    const addPartnerBtn = document.getElementById("add-partner");
     const partnersDiv = document.getElementById("partners");
-    const template = document.getElementById("partner-template").innerHTML;
+    const partnerTemplate = document.getElementById("partner-template") ? document.getElementById("partner-template").innerHTML : null;
 
-    addButton.addEventListener("click", () => {
-      partnersDiv.insertAdjacentHTML("beforeend", template);
-    });
+    if (addPartnerBtn && partnerTemplate) {
+      addPartnerBtn.addEventListener("click", () => {
+        const index = Date.now();
+        const content = partnerTemplate.replace(/P_INDEX/g, index);
+        partnersDiv.insertAdjacentHTML("beforeend", content);
+      });
+    }
 
-    partnersDiv.addEventListener("click", (e) => {
-      if (e.target && e.target.classList.contains("remove-partner")) {
-        e.target.closest(".partner-fields").remove();
+    // Tenant Vehicle addition
+    const addVehicleBtn = document.getElementById("add-tenant-vehicle");
+    const vehiclesDiv = document.getElementById("tenant-vehicles");
+    const vehicleTemplate = document.getElementById("vehicle-template") ? document.getElementById("vehicle-template").innerHTML : null;
+
+    if (addVehicleBtn && vehicleTemplate) {
+      addVehicleBtn.addEventListener("click", () => {
+        const index = Date.now();
+        const content = vehicleTemplate.replace(/V_INDEX/g, index);
+        vehiclesDiv.insertAdjacentHTML("beforeend", content);
+      });
+    }
+
+    // Generic Removal
+    document.addEventListener("click", (e) => {
+      if (e.target && (e.target.classList.contains("remove-partner") || e.target.closest(".remove-partner"))) {
+        e.target.closest(".partner-fields")?.remove();
+      }
+      if (e.target && (e.target.classList.contains("remove-vehicle") || e.target.closest(".remove-vehicle"))) {
+        e.target.closest(".vehicle-fields")?.remove();
       }
     });
   });

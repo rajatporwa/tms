@@ -1,5 +1,17 @@
+<% content_for :breadcrumbs do %>
+  <%= breadcrumbs([
+    { name: "Houses", path: houses_path },
+    { name: @house.house_name, path: house_path(@house) },
+    { name: "Room #{@house_room.room_number}", path: house_house_room_path(@house, @house_room) },
+    { name: @tenant.full_name, path: house_house_room_tenant_path(@house, @house_room, @tenant) },
+    { name: "Rents", path: house_house_room_tenant_rents_path(@house, @house_room, @tenant) },
+    { name: @rent.month, path: house_house_room_tenant_rent_path(@house, @house_room, @tenant, @rent) },
+    { name: "Edit" }
+  ]) %>
+<% end %>
+
 <h2 class="text-2xl font-bold mb-4">Edit Rent Record for <%= @tenant.full_name %></h2>
-<%= form_with model: [@tenant, @rent], local: true do |f| %>
+<%= form_with model: [@house, @house_room, @tenant, @rent], local: true do |f| %>
   <div class="mb-4">
     <%= f.label :month, class: 'block font-semibold' %>
     <%= f.text_field :month, class: 'w-full border border-gray-300 rounded px-3 py-2' %>

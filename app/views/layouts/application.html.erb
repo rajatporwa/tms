@@ -15,25 +15,48 @@
     <link rel="apple-touch-icon" href="/icon.png">
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
     <%= javascript_importmap_tags %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
   </head>
 
   <body class="bg-gray-100 text-gray-900">
     <!-- Tailwind Navbar -->
-    <nav class="bg-gray-900 text-white shadow p-4 flex justify-between items-center">
-      <div class="text-2xl font-bold text-white">TMS</div>
+    <% unless devise_controller? && !user_signed_in? %>
+      <nav class="bg-gray-900 text-white shadow p-4 flex justify-between items-center">
+        <div class="text-2xl font-bold text-white">TMS</div>
 
-      <div class="flex items-center space-x-4">
-        <% if user_signed_in? %>
-          <span class="text-gray-300 whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]">Hello, <%= current_user.username || current_user.email %></span>
-          <%= button_to 'Logout', destroy_user_session_path, method: :delete, class: "bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded" %>
-        <% else %>
-          <%= link_to 'Login', new_user_session_path, class: "mr-4 text-blue-300 hover:text-white" %>
-          <%= link_to 'Sign Up', new_user_registration_path, class: "text-blue-300 hover:text-white" %>
-        <% end %>
+        <div class="flex items-center space-x-4">
+          <% if user_signed_in? %>
+            <%= link_to 'Houses', houses_path, class: "text-gray-300 hover:text-white font-medium" %>
+            <% if current_user.respond_to?(:owner?) && current_user.owner? %>
+              <%= link_to 'Dashboard', dashboard_owner_path, class: "text-gray-300 hover:text-white font-medium" %>
+            <% end %>
+            <div class="h-6 w-px bg-gray-700 mx-2"></div>
+            <span class="text-gray-300 whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px] flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1.5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              <%= current_user.username || current_user.email %>
+            </span>
+            <%= button_to destroy_user_session_path, method: :delete, form: { data: { turbo: false } }, class: "bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-md text-sm font-medium transition-colors border-0 cursor-pointer ml-3 flex items-center" do %>
+              Logout
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            <% end %>
+          <% end %>
+        </div>
+      </nav>
+    <% end %>
+
+    <!-- Breadcrumbs -->
+    <% if content_for?(:breadcrumbs) %>
+      <div class="bg-white border-b border-gray-200 shadow-sm">
+        <div class="container mx-auto px-4 py-2">
+          <%= yield :breadcrumbs %>
+        </div>
       </div>
-    </nav>
+    <% end %>
 
     <!-- Flash Messages -->
     <div class="container mx-auto px-4 mt-4">

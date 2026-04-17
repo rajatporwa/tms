@@ -1,4 +1,143 @@
-<div>
-  <h1 class="font-bold text-4xl">Tenants#edit</h1>
-  <p>Find me in app/views/tenants/edit.html.erb</p>
+<% content_for :breadcrumbs do %>
+  <%= breadcrumbs([
+    { name: "Houses", path: houses_path },
+    { name: @house.house_name, path: house_path(@house) },
+    { name: "Room #{@house_room.room_number}", path: house_house_room_path(@house, @house_room) },
+    { name: @tenant.full_name, path: house_house_room_tenant_path(@house, @house_room, @tenant) },
+    { name: "Edit" }
+  ]) %>
+<% end %>
+
+<div class="max-w-5xl mx-auto py-8">
+  <div class="bg-white shadow-xl shadow-blue-900/5 rounded-3xl overflow-hidden border border-gray-100">
+    <div class="bg-gradient-to-r from-blue-600 to-indigo-700 px-8 py-6 mb-8">
+      <h2 class="text-2xl font-bold text-white">Edit Tenant Profile</h2>
+      <p class="text-blue-100 text-sm mt-1">Update information for <%= @tenant.full_name %></p>
+    </div>
+
+    <%= form_with(model: [@house, @house_room, @tenant], local: true, class: "px-8 pb-8") do |f| %>
+      <% if @tenant.errors.any? %>
+        <div class="bg-red-50 border border-red-200 text-red-700 rounded-xl p-4 mb-8 text-sm">
+          <p class="font-bold mb-1">Please fix the following errors:</p>
+          <ul class="list-disc list-inside">
+            <% @tenant.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+        <!-- Basic Info -->
+        <div>
+          <%= f.label :first_name, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_field :first_name, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" %>
+        </div>
+        <div>
+          <%= f.label :last_name, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_field :last_name, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" %>
+        </div>
+        <div>
+          <%= f.label :mobile, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_field :mobile, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" %>
+        </div>
+        <div>
+          <%= f.label :alternate_mobile, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_field :alternate_mobile, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" %>
+        </div>
+        <div>
+          <%= f.label :dob, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.date_field :dob, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" %>
+        </div>
+        <div>
+          <%= f.label :gender, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.select :gender, [["Male", "male"], ["Female", "female"], ["Other", "other"]], {include_blank: "Select"}, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white" %>
+        </div>
+        <div>
+          <%= f.label :occupation, "Occupation / School", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_field :occupation, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" %>
+        </div>
+        <div>
+          <%= f.label :rent_start_date, "Rent Start Date", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.date_field :rent_start_date, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" %>
+        </div>
+        <div>
+          <%= f.label :rent_end_date, "Rent End Date", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.date_field :rent_end_date, class: "w-full border border-gray-300 rounded-xl px-4 py-3 bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" %>
+          <p class="text-[11px] text-gray-400 mt-1 ml-1">Auto-set when tenant vacates</p>
+        </div>
+        <div>
+          <%= f.label :status, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.select :status, [["Active", "active"], ["Inactive", "inactive"], ["Vacated", "vacated"]], {}, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white" %>
+        </div>
+        <div class="col-span-full">
+          <%= f.label :permanent_address, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1" %>
+          <%= f.text_area :permanent_address, rows: 2, class: "w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" %>
+        </div>
+        
+        <!-- Files -->
+         <div class="p-4 bg-gray-50 rounded-2xl border border-gray-200">
+          <%= f.label :profile_photo, class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2" %>
+          <%= f.file_field :profile_photo, class: "w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" %>
+        </div>
+        <div class="p-4 bg-gray-50 rounded-2xl border border-gray-200">
+          <%= f.label :document_file, "Document (Active Storage)", class: "block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2" %>
+          <%= f.file_field :document_file, class: "w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" %>
+        </div>
+      </div>
+
+      <!-- Multiple Vehicles Section -->
+      <div class="mt-12 pt-8 border-t border-gray-100">
+        <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+          <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mr-4">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+          </div>
+          Manage Vehicles
+        </h3>
+        
+        <div id="tenant-vehicles" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <%= f.fields_for :vehicles do |v| %>
+            <%= render 'vehicle_fields', f: v %>
+          <% end %>
+        </div>
+        
+        <button type="button" id="add-tenant-vehicle" class="mt-6 inline-flex items-center px-6 py-3 bg-blue-50 text-blue-700 font-bold rounded-xl hover:bg-blue-100 transition">
+          <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+          Add New Vehicle
+        </button>
+      </div>
+
+      <div class="mt-12 flex flex-col md:flex-row items-center gap-4">
+        <%= f.submit "Save Profile Updates", class: "w-full md:w-auto px-12 py-4 bg-blue-600 text-white rounded-2xl font-black text-lg shadow-lg shadow-blue-200 hover:bg-blue-700 hover:shadow-xl transition-all cursor-pointer" %>
+        <%= link_to "Discard Changes", house_house_room_tenant_path(@house, @house_room, @tenant), class: "w-full md:w-auto px-8 py-4 text-center text-gray-500 font-bold hover:text-gray-700 transition" %>
+      </div>
+      <!-- Template for dynamic vehicle -->
+      <div id="vehicle-template" class="hidden">
+        <%= f.fields_for :vehicles, Vehicle.new, child_index: "V_INDEX" do |v| %>
+          <%= render 'vehicle_fields', f: v %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const addVehicleBtn = document.getElementById("add-tenant-vehicle");
+    const vehiclesDiv = document.getElementById("tenant-vehicles");
+    const vehicleTemplate = document.getElementById("vehicle-template").innerHTML;
+
+    addVehicleBtn.addEventListener("click", () => {
+      const uniqueIndex = Date.now();
+      const content = vehicleTemplate.replace(/V_INDEX/g, uniqueIndex);
+      vehiclesDiv.insertAdjacentHTML("beforeend", content);
+    });
+
+    document.addEventListener("click", (e) => {
+      if (e.target && (e.target.classList.contains("remove-vehicle") || e.target.closest(".remove-vehicle"))) {
+        const fields = e.target.closest(".vehicle-fields");
+        if (fields) fields.remove();
+      }
+    });
+  });
+</script>

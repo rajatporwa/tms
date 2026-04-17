@@ -1,3 +1,15 @@
+<% content_for :breadcrumbs do %>
+  <%= breadcrumbs([
+    { name: "Houses", path: houses_path },
+    { name: @house.house_name, path: house_path(@house) },
+    { name: "Room #{@house_room.room_number}", path: house_house_room_path(@house, @house_room) },
+    { name: @tenant.full_name, path: house_house_room_tenant_path(@house, @house_room, @tenant) },
+    { name: "Rents", path: house_house_room_tenant_rents_path(@house, @house_room, @tenant) },
+    { name: @rent.month, path: house_house_room_tenant_rent_path(@house, @house_room, @tenant, @rent) },
+    { name: "Payment Details" }
+  ]) %>
+<% end %>
+
 <h2 class="text-2xl font-bold mb-4">Payment Details for <%= @tenant.full_name %> - <%= @rent.month %></h2>
 <table class="min-w-full bg-white border border-gray-200">
   <tr><th>Amount</th><td>₹<%= @payment.amount %></td></tr>
@@ -12,4 +24,4 @@
     <img src="<%= @payment.upi_qr_code_url %>" alt="UPI QR Code" class="border rounded shadow w-48 h-48" />
   </div>
 <% end %>
-<%= link_to 'Back to Payments', tenant_rent_payments_path(@tenant, @rent), class: 'bg-blue-600 text-white px-4 py-2 rounded mt-4 inline-block' %>
+<%= link_to '← Back to Rent', house_house_room_tenant_rent_path(@house, @house_room, @tenant, @rent), class: 'bg-blue-600 text-white px-4 py-2 rounded mt-4 inline-block' %>
